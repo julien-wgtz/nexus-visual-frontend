@@ -15,6 +15,7 @@
     "gulp": "^4.0.2",
     "i18next-parser": "^8.13.0",
     "next": "14.1.0",
+    "next-intl": "^3.9.1",
     "react": "^18",
     "react-dom": "^18",
     "tailwind-merge": "^2.2.1",
