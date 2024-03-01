@@ -1,9 +1,6 @@
 {
-  "Index": {
-    "title": "Bonjour world!",
-    "chauffage": "ça va être une bonne journée"
-  },
-  "index": {
-    "title": "Créer un nouveau projet"
+  "commun": {
+    "sign-in": "Se connecter",
+    "sign-up": "Commencer"
   }
 }

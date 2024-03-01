@@ -21,5 +21,7 @@ import {
 
 export default function CardWithForm() {
   const t = useTranslations("commun");
-  return <span>fe</span>;
+  return (
+    <span className=" text-gray-100">Signup</span>
+  );
 }

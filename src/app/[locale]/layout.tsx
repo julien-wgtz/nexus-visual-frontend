@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "../globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
+import NavBar from "@/components/ui/navbar";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -17,9 +16,15 @@ export default function LocalLayout({
   params: { locale: string };
 }>) {
   return (
-    <html lang={locale}>
-      <body className={inter.className}>
-        {children}
+    <html
+      lang={locale}
+      className="text-gray-100 bg-slate-950"
+    >
+      <body className="flex flex-col items-center h-screen bg-slate-950">
+        <NavBar />
+        <main className="mt-[58px]">
+          {children}
+        </main>
       </body>
     </html>
   );

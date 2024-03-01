@@ -1,9 +1,6 @@
 {
-  "Index": {
-    "title": "Hello world!",
-    "chauffage": "It's gona be a good day "
-  },
-  "index": {
-    "title": "Create a new project"
+  "commun": {
+    "sign-in": "Sign in",
+    "sign-up": "Get started"
   }
 }
