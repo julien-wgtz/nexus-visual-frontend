@@ -1,6 +1,38 @@
 {
-  "commun": {
+  "sign-in": {
+    "form": {
+      "email": "Email",
+      "password": "Password",
+      "sign-in-title": "Continue",
+      "error-invalide-adresse": "The email is incorrect",
+      "error-invalide-password": "Password must contain at least 8 characters",
+      "error-server-unavailable": "The connection server is not accessible",
+      "loading": "Wait..."
+    },
+    "sign-in-title": "Log in to Nexus",
+    "description-sign-in": "Don't have an account?",
+    "sign-up": "Sign up",
+    "title-page": "Login"
+  },
+  "sign-up": {
+    "title": "Sign up",
     "sign-in": "Sign in",
-    "sign-up": "Get started"
+    "description": "Already have an account? ",
+    "form": {
+      "email": "Email",
+      "password": "Password",
+      "confirm-password": "Confirm password ",
+      "create-account": "Create account",
+      "error-invalide-adresse": "The email is incorrect",
+      "error-invalide-password": "Password must contain at least 8 characters",
+      "error-server-unavailable": "The server is not accessible",
+      "error-dont-match-password": "Passwords don't match ",
+      "error-user-already-exist": "An account already exists with this email address"
+    }
+  },
+  "navbar": {
+    "sign-in": "Sign in",
+    "sign-up": "Sign up",
+    "dashboard": "Go to dashboard"
   }
 }

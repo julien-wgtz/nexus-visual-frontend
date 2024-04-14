@@ -1,14 +1,49 @@
-import createMiddleware from "next-intl/middleware";
+import createIntlMiddleware from "next-intl/middleware";
+import {
+  NextRequest,
+  NextResponse,
+} from "next/server";
 
-export default createMiddleware({
-  // A list of all locales that are supported
-  locales: ["en", "fr"],
+const locales = ["en", "fr"];
+const publicPages = ["/", "/signin"];
 
-  // Used when no locale matches
+const intlMiddleware = createIntlMiddleware({
+  locales,
   defaultLocale: "en",
 });
 
+const authMiddleware = (req: NextRequest) => {
+  const isAuthorized =
+    req.cookies.get("connect.sid") !== undefined;
+  if (isAuthorized) {
+    return intlMiddleware(req);
+  } else {
+    return NextResponse.redirect(
+      `${process.env.BASE_URL}signin`
+    );
+  }
+};
+
+export default function middleware(
+  req: NextRequest
+) {
+  const publicPathnameRegex = RegExp(
+    `^(/(${locales.join(
+      "|"
+    )}))?(${publicPages.join("|")})?/?$`,
+    "i"
+  );
+  const isPublicPage = publicPathnameRegex.test(
+    req.nextUrl.pathname
+  );
+
+  if (isPublicPage) {
+    return intlMiddleware(req);
+  } else {
+    return (authMiddleware as any)(req);
+  }
+}
+
 export const config = {
-  // Match only internationalized pathnames
-  matcher: ["/", "/(fr|en)/:path*"],
+  matcher: ["/((?!api|_next|.*\\..*).*)"],
 };
