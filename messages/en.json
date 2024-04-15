@@ -34,5 +34,13 @@
     "sign-in": "Sign in",
     "sign-up": "Sign up",
     "dashboard": "Go to dashboard"
+  },
+  "common": {
+    "upgrade-title": "Upgrade to Pro",
+    "upgrade-description": "Unlock all features and get unlimited access to our support team.",
+    "upgrade-button": "Upgrade",
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Logout"
   }
 }

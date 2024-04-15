@@ -34,5 +34,13 @@
     "sign-in": "Connexion",
     "sign-up": "S'inscrire",
     "dashboard": "Tableau de bord"
+  },
+  "common": {
+    "upgrade-title": "Passer à la version Pro",
+    "upgrade-description": "Débloquez toutes les fonctionnalités et obtenez un accès illimité à notre équipe d'assistance.",
+    "upgrade-button": "Mettre à niveau",
+    "profile": "Profil",
+    "settings": "Paramètres",
+    "logout": "Se déconnecter"
   }
 }

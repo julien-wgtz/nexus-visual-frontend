@@ -18,11 +18,8 @@ export default function LocalLayout({
   const messages = useMessages();
 
   return (
-    <html
-      lang={locale}
-      className="text-gray-100 bg-slate-950"
-    >
-      <body className="flex flex-col items-center h-screen bg-slate-950">
+    <html lang={locale} className="">
+      <body className="flex flex-col items-center h-screen">
         {children}
       </body>
     </html>
