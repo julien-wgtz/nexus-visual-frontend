@@ -72,8 +72,12 @@ const SignInForm = () => {
     values: z.infer<typeof schema>
   ) => {
     const response = await connectUser(values);
-    if (response?.status == 201) {
+    if (response?.status == 200) {
       setLoading(false);
+      const { data } = await response.json();
+      const { user, account } = data;
+      console.log(user, account);
+      //TODO save user and account in local storage
       router.push(`dashboard`);
     } else if (
       response?.status == 401 ||

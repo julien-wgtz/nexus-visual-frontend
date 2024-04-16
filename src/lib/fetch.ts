@@ -1,6 +1,6 @@
 export const fetchData = async (
   url: string,
-  config: any
+  config?: any
 ) => {
   let configBase = {
     method: "POST",

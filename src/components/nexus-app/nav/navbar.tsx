@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -19,9 +20,11 @@ import {
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { fetchData } from "@/lib/fetch";
 import { CircleUser, Menu } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { use } from "react";
 
 interface NavbarProps {
@@ -32,9 +35,23 @@ const Navbar: React.FC = ({
   asSidebar = true,
 }: NavbarProps) => {
   const t = useTranslations("common");
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetchData(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}auth/logout`
+      );
+      if (response?.ok) {
+        router.push("signin");
+      }
+    } catch (error: any) {
+      console.error(error);
+    }
+  };
 
   return (
-    <header className="grid h-14 w-full grid-cols-[1fr_1fr] md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] items-center border-b px-4 lg:h-[60px] lg:px-6 bg-muted/40 ">
+    <header className="fixed grid h-14 w-full grid-cols-[1fr_1fr] md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] items-center border-b px-4 lg:h-[60px] lg:px-6 bg-background ">
       <div
         className={`flex h-full items-center ${
           asSidebar ? "md:border-r" : ""
@@ -105,7 +122,9 @@ const Navbar: React.FC = ({
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={handleLogout}
+            >
               {t("logout")}
             </DropdownMenuItem>
           </DropdownMenuContent>

@@ -48,13 +48,8 @@ const Layout: React.FC<LayoutProps> = ({
   return (
     <>
       <Navbar />
-      <main className="w-full h-full">
-        <div className="grid h-14 grid-cols-[1fr] md:grid-cols-[236px_1fr] lg:grid-cols-[304px_1fr]  w-full h-full">
-          <Sidebar className="hidden md:flex"></Sidebar>
-          <div className=" h-full p-4">
-            {children}
-          </div>
-        </div>
+      <main className="w-full h-full bg-muted/40 mt-14">
+        {children}
       </main>
     </>
   );

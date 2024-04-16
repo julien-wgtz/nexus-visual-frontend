@@ -29,9 +29,9 @@ export default function SignUp() {
   return (
     <section className="flex w-full h-full">
       <div className="flex justify-center items-center w-2/4 hidden md:flex h-full p-4">
-        <div className="w-full max-w-[450px] max-h-[680px] h-full bg-slate-100 rounded-2xl"></div>
+        <div className="w-full max-w-[450px] max-h-[680px] h-full border border-dashed shadow-sm rounded-lg"></div>
       </div>
-      <aside className="flex w-full md:w-2/4 h-full p-4 text-gray-100">
+      <aside className="flex w-full md:w-2/4 h-full p-4 ">
         <div className="flex flex-col justify-center items-start w-full h-full rounded-2xl p-8">
           <h2 className="text-xl font-semibold">
             {t("title")}

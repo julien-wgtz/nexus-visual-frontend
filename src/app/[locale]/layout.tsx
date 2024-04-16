@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
-import { useMessages } from "next-intl";
+import {
+  NextIntlClientProvider,
+  useMessages,
+} from "next-intl";
 
 import "../globals.css";
 
@@ -18,10 +21,12 @@ export default function LocalLayout({
   const messages = useMessages();
 
   return (
-    <html lang={locale} className="">
-      <body className="flex flex-col items-center h-screen">
-        {children}
-      </body>
-    </html>
+    <NextIntlClientProvider messages={messages}>
+      <html lang={locale} className="">
+        <body className="flex flex-col items-center h-screen">
+          {children}
+        </body>
+      </html>
+    </NextIntlClientProvider>
   );
 }

@@ -24,7 +24,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   return (
     <aside
       className={cn(
-        "flex flex-col justify-between h-full w-full border-r bg-muted/40",
+        "flex flex-col justify-between h-full w-full border-r bg-background",
         className
       )}
     >

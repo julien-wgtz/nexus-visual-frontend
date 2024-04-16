@@ -5,7 +5,7 @@ import {
 } from "next/server";
 
 const locales = ["en", "fr"];
-const publicPages = ["/", "/signin"];
+const publicPages = ["/", "/signin", "/signup"];
 
 const intlMiddleware = createIntlMiddleware({
   locales,

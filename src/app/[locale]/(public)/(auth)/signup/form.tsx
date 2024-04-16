@@ -58,6 +58,7 @@ const SignUpForm = () => {
           message: t("error-user-already-exist"),
         };
       }
+
       return response;
     } catch (error: any) {
       if (error?.cause?.code) {
@@ -75,6 +76,11 @@ const SignUpForm = () => {
     const response = await createUser(values);
     if (response?.status == 201) {
       setLoading(false);
+      const { data } = await response.json();
+      const { user, account } = data;
+
+      //TODO Stock into store user and account
+
       router.push(`dashboard`);
     } else if (
       response?.status == 409 ||
