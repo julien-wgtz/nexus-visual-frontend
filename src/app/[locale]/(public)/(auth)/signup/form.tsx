@@ -19,11 +19,14 @@ import { fetchData } from "@/lib/fetch";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ReloadIcon } from "@radix-ui/react-icons";
+import { useAppStore } from "@/store/store";
 
 const SignUpForm = () => {
   const router = useRouter();
   const t = useTranslations("sign-up.form");
   const formSchema = signupSchema(t);
+
+  const appStore: any = useAppStore();
 
   const [loading, setLoading] = useState(false);
 
@@ -78,8 +81,8 @@ const SignUpForm = () => {
       setLoading(false);
       const { data } = await response.json();
       const { user, account } = data;
-
-      //TODO Stock into store user and account
+      appStore.setUser(user);
+      appStore.setAccount(account);
 
       router.push(`dashboard`);
     } else if (

@@ -1,4 +1,5 @@
 "use client";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -21,6 +22,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { fetchData } from "@/lib/fetch";
+import { useAppStore } from "@/store/store";
+import { access } from "fs";
 import { CircleUser, Menu } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
@@ -36,6 +39,12 @@ const Navbar: React.FC = ({
 }: NavbarProps) => {
   const t = useTranslations("common");
   const router = useRouter();
+
+  const appStore = useAppStore();
+  const { account }: any = appStore;
+
+  const color =
+    account?.status === "FREE" ? "gray" : "teal";
 
   const handleLogout = async () => {
     try {
@@ -114,6 +123,12 @@ const Navbar: React.FC = ({
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>
               {t("profile")}
+              <Badge
+                className={`ml-4 border-${color}-500 text-${color}-500`}
+                variant="outline"
+              >
+                {account?.status}
+              </Badge>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
@@ -124,6 +139,7 @@ const Navbar: React.FC = ({
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={handleLogout}
+              className="cursor-pointer"
             >
               {t("logout")}
             </DropdownMenuItem>

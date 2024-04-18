@@ -18,11 +18,14 @@ import { signinSchema } from "./schema";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ReloadIcon } from "@radix-ui/react-icons";
+import { useAppStore } from "@/store/store";
 
 const SignInForm = () => {
   const router = useRouter();
   const t = useTranslations("sign-in.form");
   const schema = signinSchema(t);
+
+  const appStore: any = useAppStore();
 
   const [loading, setLoading] = useState(false);
 
@@ -76,8 +79,8 @@ const SignInForm = () => {
       setLoading(false);
       const { data } = await response.json();
       const { user, account } = data;
-      console.log(user, account);
-      //TODO save user and account in local storage
+      appStore.setUser(user);
+      appStore.setAccount(account);
       router.push(`dashboard`);
     } else if (
       response?.status == 401 ||

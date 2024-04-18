@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -7,8 +8,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { useAppStore } from "@/store/store";
 import { useTranslations } from "next-intl";
-import React, { Component, use } from "react";
+import React from "react";
 
 interface SidebarProps {
   children?: React.ReactNode;
@@ -20,6 +22,8 @@ const Sidebar: React.FC<SidebarProps> = ({
   className,
 }) => {
   const t = useTranslations("common");
+  const appStore: any = useAppStore();
+  const accountStatus = appStore.account?.status;
 
   return (
     <aside
@@ -29,23 +33,28 @@ const Sidebar: React.FC<SidebarProps> = ({
       )}
     >
       <div>{children}</div>
-      <div className="mt-auto p-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>
-              {t("upgrade-title")}
-            </CardTitle>
-            <CardDescription>
-              {t("upgrade-description")}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button size="sm" className="w-full">
-              {t("upgrade-button")}
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
+      {accountStatus === "FREE" && (
+        <div className="mt-auto p-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>
+                {t("upgrade-title")}
+              </CardTitle>
+              <CardDescription>
+                {t("upgrade-description")}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button
+                size="sm"
+                className="w-full"
+              >
+                {t("upgrade-button")}
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </aside>
   );
 };
