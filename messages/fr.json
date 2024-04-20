@@ -42,5 +42,13 @@
     "profile": "Profil",
     "settings": "Paramètres",
     "logout": "Se déconnecter"
+  },
+  "chart": {
+    "newChart": "Graphique",
+    "newFolder": "Dossier",
+    "newChartLong": "Nouveau graphique",
+    "newFolderLong": "Nouveau dossier",
+    "removeFolder": "Supprimer",
+    "renameFolder": "Renommer"
   }
 }

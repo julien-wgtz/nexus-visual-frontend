@@ -1,4 +1,4 @@
-import Sidebar from "@/components/nexus-app/nav/sidebar";
+import Sidebar from "@/components/nexus-app/nav/sidebar/sidebar";
 import { Button } from "@/components/ui/button";
 import {
   Card,
