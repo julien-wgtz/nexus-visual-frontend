@@ -47,29 +47,47 @@ var button_1 = require("@/components/ui/button");
 var context_menu_1 = require("@/components/ui/context-menu");
 var fetch_1 = require("@/lib/fetch");
 var store_1 = require("@/store/store");
-var collapsible_1 = require("@/components/ui/collapsible");
 var react_context_menu_1 = require("@radix-ui/react-context-menu");
 var lucide_react_1 = require("lucide-react");
 var next_intl_1 = require("next-intl");
 var react_1 = require("react");
-var dropdown_menu_1 = require("@/components/ui/dropdown-menu");
 require("./style.scss");
 var skeleton_1 = require("@/components/ui/skeleton");
-// TODO Stocker les folders dans le store
-//drag and drop
-//TODO Ajouter le rename des folders
+var folderStore_1 = require("@/store/folderStore");
+var folder_1 = require("./folders/folder");
+var react_dnd_1 = require("react-dnd");
+var react_dnd_html5_backend_1 = require("react-dnd-html5-backend");
+var action_1 = require("./folders/action");
+// TODO Faire une fonction pour réorganiser les chart
 var MenuChart = function (props) {
     var t = next_intl_1.useTranslations('chart');
     var appStore = store_1.useAppStore();
     var account = appStore.account;
+    var folders = folderStore_1["default"](function (state) { return state.folders; });
+    var setFolders = folderStore_1["default"](function (state) { return state.updateFolders; });
+    var addFolder = folderStore_1["default"](function (state) { return state.addFolder; });
+    var updateFolders = folderStore_1["default"](function (state) { return state.updateFolders; });
     var _a = react_1.useState(false), loadingFolders = _a[0], setLoadingFolders = _a[1];
-    var _b = react_1.useState([]), folders = _b[0], setFolders = _b[1];
+    var _b = react_1.useState([]), folderReorder = _b[0], setFolderReorder = _b[1];
+    var reorderFolders = function (f) {
+        var newFolders = __spreadArrays(f);
+        newFolders.sort(function (a, b) {
+            if (a.order === b.order) {
+                b.order += 1;
+            }
+            return a.order - b.order;
+        });
+        return newFolders;
+    };
+    react_1.useEffect(function () {
+        setFolderReorder(reorderFolders(folders));
+    }, [folders]);
     react_1.useEffect(function () {
         if (account === null)
             return;
         try {
             var fetchDataAsync = function () { return __awaiter(void 0, void 0, void 0, function () {
-                var response, folders_1;
+                var response, folders_1, folderOrder;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0: return [4 /*yield*/, fetch_1.fetchData(process.env.NEXT_PUBLIC_BACKEND_URL + "charts/get-folders", {
@@ -83,7 +101,9 @@ var MenuChart = function (props) {
                             return [4 /*yield*/, response.json()];
                         case 2:
                             folders_1 = _a.sent();
-                            setFolders(folders_1);
+                            folderOrder = reorderFolders(folders_1);
+                            updateFolders(folderOrder);
+                            setFolders(folderOrder);
                             setLoadingFolders(true);
                             return [3 /*break*/, 4];
                         case 3:
@@ -99,73 +119,15 @@ var MenuChart = function (props) {
             console.error('An error occurred', error);
         }
     }, [account]);
-    var removeFolder = function (folderId) { return __awaiter(void 0, void 0, void 0, function () {
-        var response, newFolders, error_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, fetch_1.fetchData(process.env.NEXT_PUBLIC_BACKEND_URL + "charts/delete-folder", {
-                            body: JSON.stringify({
-                                id: folderId
-                            })
-                        })];
-                case 1:
-                    response = _a.sent();
-                    if (response.ok) {
-                        newFolders = folders.filter(function (folder) { return folder.id !== folderId; });
-                        setFolders(newFolders);
-                    }
-                    return [3 /*break*/, 3];
-                case 2:
-                    error_1 = _a.sent();
-                    console.error('An error occurred', error_1);
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
-            }
-        });
-    }); };
-    var createFolder = function () { return __awaiter(void 0, void 0, void 0, function () {
-        var response, newFolder, error_2;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 5, , 6]);
-                    return [4 /*yield*/, fetch_1.fetchData(process.env.NEXT_PUBLIC_BACKEND_URL + "charts/create-folder", {
-                            body: JSON.stringify({
-                                name: t('newFolderLong'),
-                                accountId: appStore.account.id
-                            })
-                        })];
-                case 1:
-                    response = _a.sent();
-                    if (!response.ok) return [3 /*break*/, 3];
-                    return [4 /*yield*/, response.json()];
-                case 2:
-                    newFolder = _a.sent();
-                    setFolders(__spreadArrays(folders, [newFolder]));
-                    return [3 /*break*/, 4];
-                case 3:
-                    // Handle error response
-                    console.error('Failed to create folder');
-                    _a.label = 4;
-                case 4: return [3 /*break*/, 6];
-                case 5:
-                    error_2 = _a.sent();
-                    // Handle network or other errors
-                    console.error('An error occurred', error_2);
-                    return [3 /*break*/, 6];
-                case 6: return [2 /*return*/];
-            }
-        });
-    }); };
     return (react_1["default"].createElement(context_menu_1.ContextMenu, null,
         react_1["default"].createElement(react_context_menu_1.ContextMenuTrigger, { className: "flex flex-col w-full h-full md:p-0 overflow-hidden" },
             react_1["default"].createElement("div", { className: "flex justify-end gap-2 p-2 md:p-4" },
                 react_1["default"].createElement(button_1.Button, { className: "gap-2", variant: "outline", size: "sm" },
                     react_1["default"].createElement(lucide_react_1.Plus, { size: '16' }),
                     t('newChart')),
-                react_1["default"].createElement(button_1.Button, { className: "gap-2", variant: "default", size: "sm", onClick: createFolder },
+                react_1["default"].createElement(button_1.Button, { className: "gap-2", variant: "default", size: "sm", onClick: function () {
+                        return action_1.createFolder(t('newFolderLong'), account.id, folders.length, addFolder);
+                    } },
                     react_1["default"].createElement(lucide_react_1.FolderPlus, { size: '16' }),
                     t('newFolder'))),
             react_1["default"].createElement("div", { className: "flex flex-col w-full h-full overflow-scroll " }, !loadingFolders ? (react_1["default"].createElement("div", { className: "flex flex-col gap-2 px-4" },
@@ -177,29 +139,12 @@ var MenuChart = function (props) {
                     react_1["default"].createElement(skeleton_1.Skeleton, { className: "h-[20px] w-1/3 " })),
                 react_1["default"].createElement("div", { className: "flex justify-start items-center gap-2 py-2" },
                     react_1["default"].createElement(lucide_react_1.ChevronRight, { className: "icon-chevron", size: 16 }),
-                    react_1["default"].createElement(skeleton_1.Skeleton, { className: "h-[20px] w-2/5 " })))) : (react_1["default"].createElement(react_1["default"].Fragment, null, folders.map(function (folder) { return (react_1["default"].createElement(collapsible_1.Collapsible, { className: "w-full collapsible-menu-sidebar", key: "folder-" + folder.id },
-                react_1["default"].createElement("div", { className: "flex items-center justify-between space-x-4" },
-                    react_1["default"].createElement(collapsible_1.CollapsibleTrigger, { asChild: true },
-                        react_1["default"].createElement("div", { className: "flex justify-between items-center w-full cursor-pointer hover:bg-muted/85 px-4" },
-                            react_1["default"].createElement("div", { className: "flex justify-start items-center gap-2 py-2" },
-                                react_1["default"].createElement(lucide_react_1.ChevronRight, { className: "icon-chevron", size: 16 }),
-                                react_1["default"].createElement("h4", { className: "text-sm font-normal" }, folder.name)),
-                            react_1["default"].createElement(dropdown_menu_1.DropdownMenu, null,
-                                react_1["default"].createElement(dropdown_menu_1.DropdownMenuTrigger, { asChild: true },
-                                    react_1["default"].createElement(button_1.Button, { variant: "ghost", size: "icon", className: " hover:bg-transparent focus:outline-none focus-visible:ring-0" },
-                                        react_1["default"].createElement(lucide_react_1.Ellipsis, { className: "ellipseButton hidden", size: 16 }))),
-                                react_1["default"].createElement(dropdown_menu_1.DropdownMenuContent, { className: "DropdownMenuContent", side: "bottom", align: "start" },
-                                    react_1["default"].createElement(dropdown_menu_1.DropdownMenuGroup, null,
-                                        react_1["default"].createElement(dropdown_menu_1.DropdownMenuItem, { className: "DropdownMenuItem" }, t('renameFolder')),
-                                        react_1["default"].createElement(dropdown_menu_1.DropdownMenuItem, { className: "DropdownMenuItem", onClick: function (event) {
-                                                event.stopPropagation();
-                                                removeFolder(folder.id);
-                                            } }, t('removeFolder')))))))),
-                react_1["default"].createElement(collapsible_1.CollapsibleContent, { className: "w-full" },
-                    react_1["default"].createElement(button_1.Button, { className: "w-full flex justify-start font-normal rounded-none px-10", variant: "ghost", size: "sm" }, "r\u00E9sultat mensuel"),
-                    react_1["default"].createElement(button_1.Button, { className: "w-full flex justify-start font-normal rounded-none px-10", variant: "ghost", size: "sm" }, "r\u00E9sultat mensuel"),
-                    react_1["default"].createElement(button_1.Button, { className: "w-full flex justify-start font-normal rounded-none px-10", variant: "ghost", size: "sm" }, "r\u00E9sultat mensuel")))); }))))),
+                    react_1["default"].createElement(skeleton_1.Skeleton, { className: "h-[20px] w-2/5 " })))) : (react_1["default"].createElement(react_dnd_1.DndProvider, { backend: react_dnd_html5_backend_1.HTML5Backend },
+                folderReorder.map(function (folder, index) { return (react_1["default"].createElement(folder_1.Folder, { key: folder.id, id: folder.id, index: index, folder: folder })); }),
+                react_1["default"].createElement(folder_1.Folder, { key: 10000, id: 10000, index: 10000 }))))),
         react_1["default"].createElement(react_context_menu_1.ContextMenuContent, { className: "ContextMenuContent" },
-            react_1["default"].createElement(react_context_menu_1.ContextMenuItem, { className: "ContextMenuItem", onClick: createFolder }, t('newFolderLong')))));
+            react_1["default"].createElement(react_context_menu_1.ContextMenuItem, { className: "ContextMenuItem", onClick: function () {
+                    return action_1.createFolder(t('newFolderLong'), account.id, folders.length, addFolder);
+                } }, t('newFolderLong')))));
 };
 exports["default"] = MenuChart;

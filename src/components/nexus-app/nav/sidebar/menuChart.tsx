@@ -1,53 +1,54 @@
 import { Button } from '@/components/ui/button';
-import { ContextMenu, ContextMenuShortcut } from '@/components/ui/context-menu';
+import { ContextMenu } from '@/components/ui/context-menu';
 import { fetchData } from '@/lib/fetch';
 import { useAppStore } from '@/store/store';
-
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible';
 import {
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuTrigger,
 } from '@radix-ui/react-context-menu';
-import { ChevronRight, Ellipsis, FolderPlus, Plus } from 'lucide-react';
+import { ChevronRight, FolderPlus, Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import React, { use, useEffect, useState } from 'react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import './style.scss';
 import { Skeleton } from '@/components/ui/skeleton';
-
+import useFolderStore from '@/store/folderStore';
+import { Folder } from './folders/folder';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { createFolder } from './folders/action';
 interface MenuChartProps {
   // Define the props for your component here
 }
 
-// TODO Stocker les folders dans le store
-//drag and drop
-//TODO Ajouter le rename des folders
+// TODO Faire une fonction pour réorganiser les chart
 
 const MenuChart: React.FC<MenuChartProps> = (props) => {
   const t = useTranslations('chart');
   const appStore: any = useAppStore();
   const account = appStore.account;
 
+  const folders = useFolderStore((state) => state.folders);
+  const setFolders = useFolderStore((state) => state.updateFolders);
+  const addFolder = useFolderStore((state) => state.addFolder);
+  const updateFolders = useFolderStore((state) => state.updateFolders);
   const [loadingFolders, setLoadingFolders] = useState(false);
-  const [folders, setFolders] = useState<any>([]);
+  const [folderReorder, setFolderReorder] = useState<any[]>([]);
+  
+  const reorderFolders = (f: any[]) => {
+    const newFolders = [...f];
+    newFolders.sort((a, b) => {
+      if (a.order === b.order) {
+        b.order += 1;
+      }
+      return a.order - b.order;
+    });
+    return newFolders;
+  };
+
+  useEffect(() => {
+    setFolderReorder(reorderFolders(folders));
+  }, [folders])
 
   useEffect(() => {
     if (account === null) return;
@@ -63,7 +64,9 @@ const MenuChart: React.FC<MenuChartProps> = (props) => {
         );
         if (response.ok) {
           const folders = await response.json();
-          setFolders(folders);
+          const folderOrder = reorderFolders(folders);
+          updateFolders(folderOrder);
+          setFolders(folderOrder);
           setLoadingFolders(true);
         } else {
           console.error('Failed to fetch folders');
@@ -75,55 +78,6 @@ const MenuChart: React.FC<MenuChartProps> = (props) => {
       console.error('An error occurred', error);
     }
   }, [account]);
-
-  const removeFolder = async (folderId: string) => {
-    try {
-      const response = await fetchData(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}charts/delete-folder`,
-        {
-          body: JSON.stringify({
-            id: folderId,
-          }),
-        }
-      );
-
-      if (response.ok) {
-        const newFolders = folders.filter(
-          (folder: any) => folder.id !== folderId
-        );
-        setFolders(newFolders);
-      }
-    } catch (error) {
-      console.error('An error occurred', error);
-    }
-  };
-
-  const createFolder = async () => {
-    try {
-      // Make an API call to create a folder on the backend
-      const response = await fetchData(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}charts/create-folder`,
-        {
-          body: JSON.stringify({
-            name: t('newFolderLong'),
-            accountId: appStore.account.id,
-          }),
-        }
-      );
-
-      if (response.ok) {
-        // Folder created successfully
-        const newFolder = await response.json();
-        setFolders([...folders, newFolder]);
-      } else {
-        // Handle error response
-        console.error('Failed to create folder');
-      }
-    } catch (error) {
-      // Handle network or other errors
-      console.error('An error occurred', error);
-    }
-  };
 
   return (
     <ContextMenu>
@@ -137,7 +91,14 @@ const MenuChart: React.FC<MenuChartProps> = (props) => {
             className="gap-2"
             variant="default"
             size="sm"
-            onClick={createFolder}
+            onClick={() =>
+              createFolder(
+                t('newFolderLong'),
+                account.id,
+                folders.length,
+                addFolder
+              )
+            }
           >
             <FolderPlus size={'16'} />
             {t('newFolder')}
@@ -160,82 +121,17 @@ const MenuChart: React.FC<MenuChartProps> = (props) => {
               </div>
             </div>
           ) : (
-            <>
-              {folders.map((folder: any) => (
-                <Collapsible
-                  className="w-full collapsible-menu-sidebar"
-                  key={`folder-${folder.id}`}
-                >
-                  <div className="flex items-center justify-between space-x-4">
-                    <CollapsibleTrigger asChild>
-                      <div className="flex justify-between items-center w-full cursor-pointer hover:bg-muted/85 px-4">
-                        <div className="flex justify-start items-center gap-2 py-2">
-                          <ChevronRight className="icon-chevron" size={16} />
-                          <h4 className="text-sm font-normal">{folder.name}</h4>
-                        </div>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className=" hover:bg-transparent focus:outline-none focus-visible:ring-0"
-                            >
-                              <Ellipsis
-                                className="ellipseButton hidden"
-                                size={16}
-                              />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent
-                            className="DropdownMenuContent"
-                            side="bottom"
-                            align="start"
-                          >
-                            <DropdownMenuGroup>
-                              <DropdownMenuItem className="DropdownMenuItem">
-                                {t('renameFolder')}
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                className="DropdownMenuItem"
-                                onClick={(event) => {
-                                  event.stopPropagation();
-                                  removeFolder(folder.id);
-                                }}
-                              >
-                                {t('removeFolder')}
-                              </DropdownMenuItem>
-                            </DropdownMenuGroup>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                    </CollapsibleTrigger>
-                  </div>
-                  <CollapsibleContent className="w-full">
-                    <Button
-                      className="w-full flex justify-start font-normal rounded-none px-10"
-                      variant="ghost"
-                      size="sm"
-                    >
-                      résultat mensuel
-                    </Button>
-                    <Button
-                      className="w-full flex justify-start font-normal rounded-none px-10"
-                      variant="ghost"
-                      size="sm"
-                    >
-                      résultat mensuel
-                    </Button>
-                    <Button
-                      className="w-full flex justify-start font-normal rounded-none px-10"
-                      variant="ghost"
-                      size="sm"
-                    >
-                      résultat mensuel
-                    </Button>
-                  </CollapsibleContent>
-                </Collapsible>
+            <DndProvider backend={HTML5Backend}>
+              {folderReorder.map((folder: any, index: number) => (
+                <Folder
+                  key={folder.id}
+                  id={folder.id}
+                  index={index}
+                  folder={folder}
+                ></Folder>
               ))}
-            </>
+              <Folder key={10000} id={10000} index={10000}></Folder>
+            </DndProvider>
           )}
         </div>
       </ContextMenuTrigger>
@@ -244,7 +140,17 @@ const MenuChart: React.FC<MenuChartProps> = (props) => {
           {t('newChartLong')}
           <ContextMenuShortcut>⌘+g</ContextMenuShortcut>
         </ContextMenuItem> */}
-        <ContextMenuItem className="ContextMenuItem" onClick={createFolder}>
+        <ContextMenuItem
+          className="ContextMenuItem"
+          onClick={() =>
+            createFolder(
+              t('newFolderLong'),
+              account.id,
+              folders.length,
+              addFolder
+            )
+          }
+        >
           {t('newFolderLong')}
           {/* <ContextMenuShortcut>⌘+/</ContextMenuShortcut> */}
         </ContextMenuItem>

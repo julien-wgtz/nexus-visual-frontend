@@ -1,10 +1,7 @@
-import { Account } from "@/type/Account";
-import { User } from "@/type/User";
-import { create } from "zustand";
-import {
-  persist,
-  createJSONStorage,
-} from "zustand/middleware";
+import { Account } from '@/type/Account';
+import { User } from '@/type/User';
+import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 export const useAppStore = create(
   persist(
@@ -12,14 +9,11 @@ export const useAppStore = create(
       user: null,
       account: null,
       setUser: (user: User) => set({ user }),
-      setAccount: (account: Account) =>
-        set({ account }),
+      setAccount: (account: Account) => set({ account }),
     }),
     {
-      name: "app-storage",
-      storage: createJSONStorage(
-        () => sessionStorage
-      ),
+      name: 'app-storage',
+      storage: createJSONStorage(() => sessionStorage),
     }
   )
 );
