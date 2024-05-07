@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { useAppStore } from "@/store/store";
+import { useAppStore } from "@/store/appStore";
 import Link from "next/link";
 import React from "react";
 

@@ -41,14 +41,25 @@
     "upgrade-button": "Upgrade",
     "profile": "Profile",
     "settings": "Settings",
-    "logout": "Logout"
+    "logout": "Logout",
+    "next": "Next",
+    "previous": "Previous",
+    "confirm": "Confirm"
   },
   "chart": {
     "newChart": "Chart",
     "newFolder": "Folder",
     "newChartLong": "New chart",
     "newFolderLong": "New folder",
-    "removeFolder": "Delete",
-    "renameFolder": "Rename"
+    "removeFolder": "Delete Folder",
+    "renameFolder": "Rename",
+    "title_create_chart_step_1": "Select chart type",
+    "title_create_chart_step_2": "Select your dataset",
+    "select_database": "Select a database",
+    "publish": "Publish",
+    "delete": "Delete",
+    "save": "Save",
+    "removeFolderWithCharts": "Delete with charts",
+    "removeChart": "Delete chart"
   }
 }

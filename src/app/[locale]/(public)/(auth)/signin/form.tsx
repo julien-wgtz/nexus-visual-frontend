@@ -18,7 +18,7 @@ import { signinSchema } from "./schema";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ReloadIcon } from "@radix-ui/react-icons";
-import { useAppStore } from "@/store/store";
+import { useAppStore } from "@/store/appStore";
 
 const SignInForm = () => {
   const router = useRouter();

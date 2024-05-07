@@ -1,69 +1,63 @@
-import { updateFolderOrder } from '@/components/nexus-app/nav/sidebar/folders/action';
+import { updateFolderOrder } from '@/components/nexus-app/Sidebar/action';
 import { fetchData } from '@/lib/fetch';
 import { setFips } from 'crypto';
 import { remove } from 'lodash';
 import { any } from 'zod';
 import { create } from 'zustand';
+import useDashboardStore from './dashboardStore';
 
 const useFolderStore = create((set) => ({
   folders: [],
-  updateFolders: (folders: any) => {
+  setFolders: (folders: any) => {
     set((state: any) => {
       return { folders };
     });
   },
   addFolder: (folder: any) => {
     set((state: any) => {
-      const updatedFolders = [...state.folders, folder];
+      // ajoute le folder à lavant dernier index dans le table folders
+      const updatedFolders = [...state.folders];
+      updatedFolders.splice(updatedFolders.length - 1, 0, folder);
       return { folders: updatedFolders };
     });
   },
-  removeFolder: (folderId: string) => { 
+  updateFolder: (folder: any) => {
+    set((state: any) => {
+      const folderIndex = state.folders.findIndex((f: any) => f.id === folder.id);
+      const updatedFolders = [...state.folders];
+      updatedFolders[folderIndex] = folder
+      return {folders: updatedFolders}
+    })
+  },
+  updateChart: (chart: any) => {
+    set((state: any) => {
+      const folder = state.folders.find((f: any) => f.charts.find((c: any) => c.id === chart.id));
+      const chartIndex = folder.charts.findIndex((c: any) => c.id === chart.id);
+      folder.charts[chartIndex] = { ...chart };
+      return { folders: state.folders };
+    });
+  },
+  addChart: (chart: any) => {
     set((state: any) => {
       const updatedFolders = [...state.folders];
-      const folder = updatedFolders.find((f: any) => f.id === folderId);
-      const index = updatedFolders.indexOf(folder);
-      updatedFolders.splice(index, 1);
-      updatedFolders.forEach((f: any) => {
-        if (f.order > index) {
-          f.order--;
-          updateFolderOrder(f.id, f.order);
-        }
-      });
+      const folder = updatedFolders.find((f: any) => f.id === chart.folderId);
+      if(folder.charts === undefined) {
+        folder.charts = [];
+      }
+      folder.charts.push(chart);
       return { folders: updatedFolders };
     });
   },
-  moveFolders: (currentIndex: number, newIndex: number) => {
+  removeChart: (chartId: string) => {
     set((state: any) => {
       const updatedFolders = [...state.folders];
-      const folder = updatedFolders.find((f: any) => f.order === currentIndex);
-
-      if (newIndex === 10000) {
-        newIndex = updatedFolders.length;
-      }
-
-      if (currentIndex > newIndex) {
-        updatedFolders.forEach((f: any) => {
-          if (f.order >= newIndex && f.order < currentIndex) {
-            f.order++;
-            updateFolderOrder(f.id, f.order);
-          }
-        });
-        folder.order = newIndex;
-        updateFolderOrder(folder.id, newIndex);
-      } else {
-        updatedFolders.forEach((f: any) => {
-          if (f.order < newIndex && f.order > currentIndex) {
-            f.order--;
-            updateFolderOrder(f.id, f.order);
-          }
-        });
-        folder.order = newIndex - 1;
-        updateFolderOrder(folder.id, folder.order);
-      }
+      const folder = updatedFolders.find((f: any) => f.charts.find((c: any) => c.id === chartId));
+      const chart = folder.charts.find((c: any) => c.id === chartId);
+      const index = folder.charts.indexOf(chart);
+      folder.charts.splice(index, 1);
       return { folders: updatedFolders };
     });
-  },
+  }
 }));
 
 export default useFolderStore;

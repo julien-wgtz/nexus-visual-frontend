@@ -19,7 +19,7 @@ import { fetchData } from "@/lib/fetch";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ReloadIcon } from "@radix-ui/react-icons";
-import { useAppStore } from "@/store/store";
+import { useAppStore } from "@/store/appStore";
 
 const SignUpForm = () => {
   const router = useRouter();

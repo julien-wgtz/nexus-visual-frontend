@@ -41,14 +41,25 @@
     "upgrade-button": "Mettre à niveau",
     "profile": "Profil",
     "settings": "Paramètres",
-    "logout": "Se déconnecter"
+    "logout": "Se déconnecter",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "confirm": "Confirmer"
   },
   "chart": {
     "newChart": "Graphique",
     "newFolder": "Dossier",
     "newChartLong": "Nouveau graphique",
     "newFolderLong": "Nouveau dossier",
-    "removeFolder": "Supprimer",
-    "renameFolder": "Renommer"
+    "removeFolder": "Supprimer le dossier",
+    "renameFolder": "Renommer",
+    "title_create_chart_step_1": "Sélectionnez le type de graphique",
+    "title_create_chart_step_2": "Sélectionnez votre base de donnée",
+    "select_database": "Sélectionnez une base de données",
+    "publish": "Publier",
+    "delete": "Supprimer",
+    "save": "Sauvegarder",
+    "removeFolderWithCharts": "Supprimer avec les graphiques",
+    "removeChart": "Supprimer le graphique"
   }
 }
