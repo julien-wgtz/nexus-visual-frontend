@@ -44,10 +44,11 @@ const ChartItem: React.FC<Props> = ({ index,chart, folderId, isShadow }: Props) 
       isOver: monitor.isOver(),
     }),
   });
-  const [, drag] = useDrag(
+  const [{isDragging}, drag] = useDrag(
     {
       type: 'chart',
       item: { chart, index, folderId },
+      isDragging: (monitor) => monitor.getItem().chart.id === chart?.id,
       collect: (monitor: DragSourceMonitor) => ({
         isDragging: monitor.isDragging(),
       }),
@@ -101,7 +102,6 @@ const ChartItem: React.FC<Props> = ({ index,chart, folderId, isShadow }: Props) 
   useEffect(() => {
     setChartName(chart?.title);
   }, [chart])
-  
 
   return (
     <>
@@ -109,7 +109,7 @@ const ChartItem: React.FC<Props> = ({ index,chart, folderId, isShadow }: Props) 
       <div 
         ref={ref}
         data-selected={currentChart.id == chart?.id}
-        className={`group/item itemChart flex justify-between items-center w-full cursor-pointer ${chart ? "hover:bg-muted/85" : ""} ${isShadow ? "" : "pl-4"} data-[selected=true]:bg-muted/70`} 
+        className={`group/item itemChart flex justify-between items-center w-full cursor-pointer ${isDragging ? "":"hover:bg-muted/85"} ${isShadow ? "" : "pl-4"} data-[selected=true]:bg-muted/70`} 
         onClick={() => setCurrentChart(chart)}>
         {chart ? (
           <>

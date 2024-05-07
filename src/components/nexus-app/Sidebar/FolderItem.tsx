@@ -68,7 +68,7 @@ export const FolderItem = ({ index, folder }: FolderItemProps) => {
     }),
   });
 
-  const [, drag] = useDrag(
+  const [{}, drag] = useDrag(
     {
       type: 'folder',
       item: { folder, index },
@@ -150,9 +150,9 @@ export const FolderItem = ({ index, folder }: FolderItemProps) => {
           className="w-full collapsible-menu-sidebar"
           key={`folder-${folder.id}`}
         >
-       <div className={`flex items-center justify-between space-x-4 ${isOverFolder ? "bg-violet-200/30" : ""}`}>
+       <div className={`flex items-center justify-between space-x-4 ${isOverFolder ? "bg-muted" : ""}`}>
          <CollapsibleTrigger asChild>
-           <div className="itemFolder flex justify-between items-center w-full cursor-pointer hover:bg-muted/85 pl-4">
+           <div className={`itemFolder flex justify-between items-center w-full cursor-pointer hover:bg-muted/85 pl-4`}>
              <div className="flex justify-start items-center">
                <ChevronRight className="icon-chevron" size={16} />
                <div className="flex">
