@@ -36,9 +36,6 @@ const ChartItem: React.FC<Props> = ({ index,chart, folderId, isShadow }: Props) 
       if (!ref.current) {
         return;
       }
-      const dragIndex = item.index;
-      const hoverIndex = index;
-      console.log("CHARTS",item, folderId, index)
       chartApi.updateChartOrder(item.index, index, item.folderId, folderId ).then((newFolders) => {
         setFolders(newFolders) 
       })
@@ -169,9 +166,7 @@ const ChartItem: React.FC<Props> = ({ index,chart, folderId, isShadow }: Props) 
             </DropdownMenu>
           </>
         ): (
-          <div className='bg-violet-500 h-1'>
-
-          </div>
+          <div className='h-1'></div>
         )}
       </div>
     </>

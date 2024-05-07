@@ -1,8 +1,6 @@
 import { fetchData } from '@/lib/fetch';
 import { Folders } from '../type/Folders';
-import useFolderStore from '@/store/folderStore';
 import { Charts } from '../type/Charts';
-import { deleteChart } from '@/components/nexus-app/Sidebar/action';
 
 class ChartsApi {
 	private baseUrl: string | undefined;

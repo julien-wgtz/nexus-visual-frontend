@@ -55,7 +55,6 @@ export const FolderItem = ({ index, folder }: FolderItemProps) => {
           })
         } else {
           if( effect === null) {
-            console.log("FOLDER",item, folder.id)
               chartApi.updateChartOrder(item.index, 0, item.folderId, folder.id ).then((newFolders) => {
                 setFolders(newFolders)
                 setIsOpened(true)
@@ -244,8 +243,8 @@ export const FolderItem = ({ index, folder }: FolderItemProps) => {
            />
          ))}
             <ChartItem
-            key={folder.charts.length}
-            index={folder.charts.length}
+            key={folder?.charts?.length}
+            index={folder?.charts?.length}
             folderId={folder.id}
            />
        </CollapsibleContent>
