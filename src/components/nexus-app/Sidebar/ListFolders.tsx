@@ -76,7 +76,7 @@ const ListFolders: React.FC<ListFoldersProps> = (props) => {
       </div>
       <div className='flex flex-col w-full h-full overflow-hidden'>
         {loading ? (
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 pl-4">
             <div className="flex justify-start items-center gap-2 py-2">
               <ChevronRight className="icon-chevron" size={16} />
               <Skeleton className="h-[20px] w-1/2 " />

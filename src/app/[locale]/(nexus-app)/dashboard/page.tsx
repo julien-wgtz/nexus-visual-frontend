@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import ChartsApi from "@/data/model/chart";
 import configBase from '@/data/config/configChart.json';
 import { set } from "lodash";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Page = () => {
   
@@ -72,9 +73,23 @@ const Page = () => {
             )}
           </>
         ): (
-          <div className="flex justify-center items-center w-full w-full">
-            {/* // TODO update loader shadow */}
-            <CircleLoader />
+          <div className="flex flex-col gap-4 h-full p-4">
+            <div>
+              <div className="flex justify-between items-center">
+                <h3 className="text-lg font-semibold"><Skeleton className="w-[250px] h-[28px]"/></h3>
+                <div className='flex gap-2'>
+                  <Skeleton className="w-[130px] h-[36px]"/>
+                  <Skeleton className="w-[80px] h-[36px]"/>
+                </div>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-9 gap-2 h-full min-h-[350px]">
+              <Skeleton className=" col-span-1 lg:col-span-6 aspect-video" />
+              <div className='flex flex-col gap-4 col-span-1 lg:col-span-3'>
+              <Skeleton className="h-[250px]" />
+              <Skeleton className="h-[350px]" />
+              </div>
+            </div>
           </div>
         )}
       </div>
