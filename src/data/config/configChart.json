@@ -1,0 +1,18 @@
+{		
+	"theme": "dark", 
+	"lineType": "bump",
+	"background": true,
+	"legend": {
+		"display": false,
+		"verticalAlign": "bottom",
+		"align": "center"
+	},
+	"axeY": {
+		"label": "",
+		"position": "insideBottomLeft"
+	},
+	"axeX": {
+		"label": "",
+		"position": "bottom"
+	}
+}

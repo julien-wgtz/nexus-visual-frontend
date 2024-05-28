@@ -263,6 +263,11 @@ export const FolderItem = ({ index, folder }: FolderItemProps) => {
                       isShadow={true}
                     />
                   ))}
+                  <ChartItem
+                    key={folder?.charts?.length}
+                    index={folder?.charts?.length}
+                    folderId={folder.id}
+                  />
                 </div>
               </div>
           </ContextMenuTrigger>

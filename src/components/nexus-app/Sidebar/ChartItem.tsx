@@ -108,7 +108,7 @@ const ChartItem: React.FC<Props> = ({ index,chart, folderId, isShadow }: Props) 
       <div style={{ border: `1px solid ${isOver ? 'blue' : 'transparent'}` }} />
       <div 
         ref={ref}
-        data-selected={currentChart.id == chart?.id}
+        data-selected={chart !== undefined && currentChart?.id == chart?.id}
         className={`group/item itemChart flex justify-between items-center w-full cursor-pointer ${isDragging ? "":"hover:bg-muted/85"} ${isShadow ? "" : "pl-4"} data-[selected=true]:bg-muted/70`} 
         onClick={() => setCurrentChart(chart)}>
         {chart ? (

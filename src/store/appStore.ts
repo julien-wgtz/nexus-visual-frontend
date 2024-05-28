@@ -3,6 +3,7 @@ import { AccountStatus } from '@/data/enum/Account';
 import { User } from '@/data/type/User';
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import useDashboardStore from './dashboardStore';
 
 export const useAppStore = create(
   persist(

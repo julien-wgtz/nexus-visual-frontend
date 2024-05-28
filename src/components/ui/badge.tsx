@@ -19,11 +19,10 @@ const badgeVariants = cva(
           "border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80",
         outline:
           "text-foreground text-foreground",
-        free: "text-foreground border-gray-100 bg-gray-200 text-gray-600",
-        pro: "text-foreground border-violet-100 bg-violet-200 text-violet-600",
-        god: "text-foreground border-emerald-100 bg-emerald-200 text-emerald-600",
-        tester:
-          " text-foreground border-yellow-100 bg-yellow-200 text-yellow-600",
+        free: "font-semibold text-foreground border-gray-100 bg-gray-200 text-gray-600",
+        pro: "font-semibold text-foreground border-violet-100 bg-violet-200 text-violet-600",
+        god: "font-semibold text-foreground border-emerald-100 bg-emerald-200 text-emerald-600",
+        tester: "font-semibold text-foreground border-yellow-100 bg-yellow-200 text-yellow-600",
       },
     },
     defaultVariants: {

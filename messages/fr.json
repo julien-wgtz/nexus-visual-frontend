@@ -61,5 +61,13 @@
     "save": "Sauvegarder",
     "removeFolderWithCharts": "Supprimer avec les graphiques",
     "removeChart": "Supprimer le graphique"
+  },
+  "EditorChart": {
+    "chart": {
+      "apparence": "Apparence",
+      "data": "Données"
+    },
+    "themeDark": "Thème",
+    "line-type": "Type de ligne"
   }
 }

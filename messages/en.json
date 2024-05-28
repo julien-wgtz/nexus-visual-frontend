@@ -61,5 +61,13 @@
     "save": "Save",
     "removeFolderWithCharts": "Delete with charts",
     "removeChart": "Delete chart"
+  },
+  "EditorChart": {
+    "chart": {
+      "apparence": "Appaerance",
+      "data": "Data"
+    },
+    "themeDark": "Theme",
+    "line-type": "Line type"
   }
 }

@@ -80,9 +80,9 @@ const SignUpForm = () => {
     if (response?.status == 201) {
       setLoading(false);
       const { data } = await response.json();
-      const { user, account } = data;
+      const { user } = data;
       appStore.setUser(user);
-      appStore.setAccount(account);
+      appStore.setAccount(user.accountUser[0].account);
 
       router.push(`dashboard`);
     } else if (

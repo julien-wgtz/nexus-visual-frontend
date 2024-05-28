@@ -1,0 +1,55 @@
+{ 
+	"themes" : [
+		{"name": "dark", "label": "Dark"},
+		{"name": "light", "label": "Light"}
+	],
+	"lines": [
+		{"name": "natural", "label": "Natural"},
+		{"name": "linear", "label": "Linear"},
+		{"name": "linearClosed", "label": "Linear Closed"},
+		{"name": "bump", "label": "Bump"},
+		{"name": "bumpX", "label": "Bump X"},
+		{"name": "bumpY", "label": "Bump Y"},
+		{"name": "monotone", "label": "Monotone"},
+		{"name": "monotoneX", "label": "Monotone X"},
+		{"name": "step", "label": "Step"},
+		{"name": "stepBefore", "label": "Step Before"},
+		{"name": "stepAfter", "label": "Step After"}
+	],
+	"dark": {
+		"backgroundColor": "#090e1a",
+		"fontColor": "#546483",
+		"fontSize": "14px",
+		"fontWeight": "normal",
+		"grid" : {
+			"color": "#263147",
+			"widthDash": "2",
+			"gapDash": "2"
+		},
+		"colors": [
+			{"color": "#4440cc"},
+			{"color": "#11b5ae"},
+			{"color": "#f58413"},
+			{"color": "#ffff00"},
+			{"color": "#ff00ff"}
+		]
+	},
+	"light": {
+		"backgroundColor": "#fdfdfd",
+		"fontColor": "#263147",
+		"fontSize": "14px",
+		"fontWeight": "normal",
+		"grid" : {
+			"color": "#263147",
+			"widthDash": "3",
+			"gapDash": "2"
+		},
+		"colors": [
+			{"color": "#4440cc"},
+			{"color": "#11b5ae"},
+			{"color": "#f58413"},
+			{"color": "#ffff00"},
+			{"color": "#ff00ff"}
+		]
+	}
+}

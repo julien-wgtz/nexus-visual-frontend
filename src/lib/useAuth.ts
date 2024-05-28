@@ -20,7 +20,6 @@ function useAuth() {
 
         if (response.ok) {
           const account = await response.json();
-          console.log(account);
         } else {
           router.push('/login');
         }

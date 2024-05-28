@@ -27,6 +27,7 @@ import { useRouter } from 'next/navigation';
 import React, { use } from 'react';
 import MenuChart from '../Sidebar/ListFolders';
 import MarketingBlock from '../MarketingBlock/MarketingBlock';
+import useDashboardStore from '@/store/dashboardStore';
 
 interface NavbarProps {
   asSidebar?: boolean;
@@ -37,7 +38,8 @@ const Navbar: React.FC = ({ asSidebar = true }: NavbarProps) => {
   const router = useRouter();
 
   const appStore = useAppStore();
-  const { account }: any = appStore;
+  const resetData = useDashboardStore((state) => state.restoreData);
+  const { account, user }: any = appStore;
 
   const handleLogout = async () => {
     try {
@@ -45,6 +47,7 @@ const Navbar: React.FC = ({ asSidebar = true }: NavbarProps) => {
         `${process.env.NEXT_PUBLIC_BACKEND_URL}auth/logout`
       );
       if (response?.ok) {
+        resetData();
         router.push('signin');
       }
     } catch (error: any) {
@@ -88,13 +91,15 @@ const Navbar: React.FC = ({ asSidebar = true }: NavbarProps) => {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>
-              {t('profile')}
-              <Badge
-                className="ml-4"
-                variant={account?.status.toLowerCase() as any}
-              >
-                {account?.status}
-              </Badge>
+              <span className='text-muted-foreground text-sm font-normal'>{user?.email}</span>
+              {account?.status && (
+                <Badge
+                  className="ml-2"
+                  variant={account?.status.toLowerCase() as any}
+                >
+                  {account?.status}
+                </Badge>
+              )}
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>

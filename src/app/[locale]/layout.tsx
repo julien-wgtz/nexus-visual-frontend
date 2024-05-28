@@ -22,7 +22,7 @@ export default function LocalLayout({
 
   return (
     <NextIntlClientProvider messages={messages}>
-      <html lang={locale} className="">
+      <html lang={locale} className="dark">
         <body className="flex flex-col items-center h-screen">
           {children}
         </body>

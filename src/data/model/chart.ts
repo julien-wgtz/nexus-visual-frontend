@@ -27,6 +27,22 @@ class ChartsApi {
 		}
 	}
 
+	async updateConfigChart({id, config}: Charts): Promise<void> {
+		try {
+			const response = await fetchData(`${this.baseUrl}update-config-from-chart`, {
+				body: JSON.stringify({
+					chartId: id,
+					config
+				}),
+			});
+			const chart = await response.json();
+			return chart;
+		} catch (error) {
+			console.error('Error while deleting chart:', error);
+			throw error;
+		}
+	}
+
 	async deleteChart({id} : Charts): Promise<void> {
 		try {
 			const response = await fetchData(`${this.baseUrl}delete`, {
@@ -70,13 +86,52 @@ class ChartsApi {
 					folderDestinationId
 				}),
 			});
-			const folders = await response.json();
-			return folders;
+			if(response.ok) {
+				const folders = await response.json();
+				return folders;
+			}
+			throw new Error('Failed to update chart order');
 		} catch (error) {
 			console.error('Error while updating folder:', error);
 			throw error;
 		}
 	}
+
+	async getConfigChart({id}: Charts): Promise<any> {
+		try {
+			const response = await fetchData(`${this.baseUrl}get-config-from-chart`, {
+				body: JSON.stringify({
+					chartId: id
+				}),
+			
+			});
+			if(response.ok) {
+				const data = await response.json();
+				return data;
+			}
+			throw new Error('Failed to get chart data');
+		} catch (error) {
+			throw new Error('Failed to get chart data');
+		}
+	}
+
+	async getChartData({id} : Charts): Promise<Charts> {
+		try {
+			const response = await fetchData(`${this.baseUrl}get-data-from-chart`, {
+				body: JSON.stringify({
+					chartId: id
+				}),
+			
+			});
+			if(response.ok) {
+				const data = await response.json();
+				return data;
+			}
+			throw new Error('Failed to get chart data');
+		} catch (error) {
+			throw new Error('Failed to get chart data');
+		}
+	}	
 }
 
 export default ChartsApi;

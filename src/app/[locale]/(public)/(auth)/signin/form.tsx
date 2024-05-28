@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { useAppStore } from "@/store/appStore";
+import useDashboardStore from "@/store/dashboardStore";
 
 const SignInForm = () => {
   const router = useRouter();
@@ -26,7 +27,8 @@ const SignInForm = () => {
   const schema = signinSchema(t);
 
   const appStore: any = useAppStore();
-
+  const restoreData = useDashboardStore(state => state.restoreData);
+  
   const [loading, setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof schema>>({
@@ -81,6 +83,7 @@ const SignInForm = () => {
       const { user, account } = data;
       appStore.setUser(user);
       appStore.setAccount(account);
+      restoreData();
       router.push(`dashboard`);
     } else if (
       response?.status == 401 ||

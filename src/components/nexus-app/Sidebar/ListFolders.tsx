@@ -93,7 +93,7 @@ const ListFolders: React.FC<ListFoldersProps> = (props) => {
         ): (
           <div className='flex flex-col h-full overflow-scroll'>
             <DndProvider backend={HTML5Backend}>
-              {folders.map((folder: any, index: number) => (
+              {folders?.map((folder: any, index: number) => (
                 <FolderItem
                   key={folder.id}
                   index={index}
