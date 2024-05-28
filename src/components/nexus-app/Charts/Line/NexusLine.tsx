@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import {  ResponsiveContainer, Tooltip, Legend, XAxis, CartesianGrid, YAxis, LineChart, Line, Label, CartesianAxis } from 'recharts';
 import themes from '@/data/config/themesChart.json';
 import CustomizedAxisTick from '../tickAxeX';
+import CustomTooltip from '../tooltip';
 
 interface NexusLineProps {
 	data: Charts[];
@@ -49,7 +50,7 @@ const NexusLine: React.FC<NexusLineProps> = ({ data }) => {
 				{propertiesSelected.map((p: any, i: number) => {
 					return <Line type={config.lineType} dataKey={p.name} stroke={styles.colors[i].color} key={p.id} />
 				})}
-				<Tooltip />
+				<Tooltip content={<CustomTooltip styles={styles} labelType={dataAxeX[0]?.type}/>}/>
 			</LineChart>
       </ResponsiveContainer>
 	);

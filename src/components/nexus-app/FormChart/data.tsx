@@ -134,7 +134,7 @@ const DataForm: React.FC<Props> = ({ properties }) => {
 			<div className="grid gap-3">
 				<Label htmlFor="axeX">Série</Label>
 				{!isLoading && axeYSelected.map((axeY: any, index: number) =>(
-					<div className='flex gap-2' key={index}>
+					<div className='flex gap-3' key={index}>
 
 						<Select name="axeY"  value={axeY} onValueChange={(value) => updateAxeX(value, index, axeY)}>
 							<SelectTrigger
