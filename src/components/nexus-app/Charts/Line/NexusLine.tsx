@@ -3,6 +3,7 @@ import useDashboardStore from '@/store/dashboardStore';
 import React, { useEffect, useState } from 'react';
 import {  ResponsiveContainer, Tooltip, Legend, XAxis, CartesianGrid, YAxis, LineChart, Line, Label, CartesianAxis } from 'recharts';
 import themes from '@/data/config/themesChart.json';
+import CustomizedAxisTick from '../tickAxeX';
 
 interface NexusLineProps {
 	data: Charts[];
@@ -38,7 +39,7 @@ const NexusLine: React.FC<NexusLineProps> = ({ data }) => {
 		<ResponsiveContainer  width="100%" height="100%">
 			<LineChart data={data.data} margin={{ top: 0, right: 0, bottom: config.axeX?.label || config.legend.display ? 20 : 0, left: config.axeY?.label ? 10 : 0 }}>
 				{config.background && <CartesianGrid strokeDasharray={`${styles.grid.widthDash} ${styles.grid.gapDash}`} stroke={styles.grid.color} />}
-				<XAxis dataKey={dataAxeX[0]?.name} tick={{fill: styles.fontColor, strokeWidth: 0, fontSize: styles.fontSize, fontWeight: styles.fontWeight  }}  style={{stroke: styles.grid.color}}>
+				<XAxis dataKey={dataAxeX[0]?.name} tick={<CustomizedAxisTick styles={styles} type={dataAxeX[0]?.type} />}  style={{stroke: styles.grid.color}}>
 					{config.axeX?.label !== "" && <Label value={config.axeX.label} position={config.axeX?.position} fill={styles.fontColor} fontSize={styles.fontSize} fontWeight={styles.fontWeight} />}
 				</XAxis>
 				<YAxis tick={{fill: styles.fontColor, strokeWidth: 0, fontSize: styles.fontSize, fontWeight: styles.fontWeight }}  style={{stroke: styles.grid.color}}>

@@ -1,8 +1,9 @@
 { 
 	"themes" : [
 		{"name": "dark", "label": "Dark"},
-		{"name": "light", "label": "Light"}
-	],
+		{"name": "light", "label": "Light"},
+		{"name": "purple", "label": "Purple"}
+		],
 	"lines": [
 		{"name": "natural", "label": "Natural"},
 		{"name": "linear", "label": "Linear"},
@@ -27,29 +28,59 @@
 			"gapDash": "2"
 		},
 		"colors": [
-			{"color": "#4440cc"},
-			{"color": "#11b5ae"},
-			{"color": "#f58413"},
-			{"color": "#ffff00"},
-			{"color": "#ff00ff"}
+			{"color": "#3f45c6"},
+			{"color": "#0fbcb4"},
+			{"color": "#fa8911"},
+			{"color": "#ec4089"},
+			{"color": "#848aff"},
+			{"color": "#ff00ff"},
+			{"color": "#3f45c6"},
+			{"color": "#0fbcb4"},
+			{"color": "#fa8911"},
+			{"color": "#ec4089"}
 		]
 	},
 	"light": {
 		"backgroundColor": "#fdfdfd",
-		"fontColor": "#263147",
+		"fontColor": "#a8b3c5",
 		"fontSize": "14px",
 		"fontWeight": "normal",
 		"grid" : {
-			"color": "#263147",
+			"color": "#e4e9ef",
 			"widthDash": "3",
 			"gapDash": "2"
 		},
 		"colors": [
-			{"color": "#4440cc"},
-			{"color": "#11b5ae"},
-			{"color": "#f58413"},
-			{"color": "#ffff00"},
-			{"color": "#ff00ff"}
+			{"color": "#3f45c6"},
+			{"color": "#0fbcb4"},
+			{"color": "#fa8911"},
+			{"color": "#ec4089"},
+			{"color": "#848aff"},
+			{"color": "#ff00ff"},
+			{"color": "#3f45c6"},
+			{"color": "#0fbcb4"},
+			{"color": "#fa8911"},
+			{"color": "#ec4089"}
+		]
+	},
+	"purple": {
+		"backgroundColor": "#f9f0f9",
+		"fontColor": "#6a4a83",
+		"fontSize": "14px",
+		"fontWeight": "normal",
+		"grid": {
+			"color": "#e3bde3",
+			"widthDash": "2",
+			"gapDash": "2"
+		},
+		"colors": [
+			{"color": "#27004f"},
+			{"color": "#450688"},
+			{"color": "#8112c9"},
+			{"color": "#c361ff"},
+			{"color": "#e3b8ff"}
 		]
 	}
+	
+
 }
