@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import useFolderStore from '@/store/folderStore';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { FolderItem } from './FolderItem';
+import FolderItem from './FolderItem';
 import './style.scss';
 import useDashboardStore from '@/store/dashboardStore';
 import FolderApi from '@/data/model/folder';
@@ -19,15 +19,15 @@ interface ListFoldersProps {
 const ListFolders: React.FC<ListFoldersProps> = (props) => {
   const t = useTranslations('chart');
 
-  const accountId = useAppStore((state) => state.accountId);
+  const accountId = useAppStore((state: any) => state.accountId);
   
   const folderApi = new FolderApi();
-  const folders = useFolderStore((state) => state.folders);
-  const setFolders = useFolderStore((state) => state.setFolders);
-  const addFolder = useFolderStore((state) => state.addFolder);
+  const folders = useFolderStore((state: any) => state.folders);
+  const setFolders = useFolderStore((state: any) => state.setFolders);
+  const addFolder = useFolderStore((state: any) => state.addFolder);
   
-  const setOpenDialogCreateChart = useDashboardStore((state) => state.setDialogIsOpen);
-  const setDataForChart = useDashboardStore((state) => state.setDataForChart);
+  const setOpenDialogCreateChart = useDashboardStore((state: any) => state.setDialogIsOpen);
+  const setDataForChart = useDashboardStore((state: any) => state.setDataForChart);
 
 
   const [loading, setLoading] = useState(true)

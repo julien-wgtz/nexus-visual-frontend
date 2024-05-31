@@ -4,7 +4,7 @@ import { useAppStore } from '@/store/appStore';
 import { useRouter } from 'next/navigation';
 
 function useAuth() {
-  const setAccount = useAppStore(state => state.setAccount);
+  const setAccount = useAppStore((state: any) => state.setAccount);
   const router = useRouter();
 
   

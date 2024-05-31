@@ -36,7 +36,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.FolderItem = void 0;
 var react_1 = require("react");
 var react_dnd_1 = require("react-dnd");
 var ChartItem_1 = require("./ChartItem");
@@ -50,7 +49,7 @@ var folderStore_1 = require("@/store/folderStore");
 var dashboardStore_1 = require("@/store/dashboardStore");
 var folder_1 = require("@/data/model/folder");
 var chart_1 = require("@/data/model/chart");
-exports.FolderItem = function (_a) {
+var FolderItem = function (_a) {
     var _b, _c, _d, _e, _f, _g;
     var index = _a.index, folder = _a.folder;
     var t = next_intl_1.useTranslations('');
@@ -211,3 +210,4 @@ exports.FolderItem = function (_a) {
                         _e.map(function (chart, index) { return (React.createElement(ChartItem_1["default"], { key: index, index: index, chart: chart, folderId: folder.id, isShadow: true })); }),
                         React.createElement(ChartItem_1["default"], { key: (_f = folder === null || folder === void 0 ? void 0 : folder.charts) === null || _f === void 0 ? void 0 : _f.length, index: (_g = folder === null || folder === void 0 ? void 0 : folder.charts) === null || _g === void 0 ? void 0 : _g.length, folderId: folder.id }))))))));
 };
+exports["default"] = FolderItem;

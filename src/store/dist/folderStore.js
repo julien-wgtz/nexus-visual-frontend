@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __spreadArrays = (this && this.__spreadArrays) || function () {
     for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
     for (var r = Array(s), k = 0, i = 0; i < il; i++)
@@ -7,7 +18,6 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
     return r;
 };
 exports.__esModule = true;
-var action_1 = require("@/components/nexus-app/Sidebar/action");
 var zustand_1 = require("zustand");
 var useFolderStore = zustand_1.create(function (set) { return ({
     folders: [],
@@ -18,15 +28,10 @@ var useFolderStore = zustand_1.create(function (set) { return ({
     },
     addFolder: function (folder) {
         set(function (state) {
-            return { folders: __spreadArrays(state.folders, [folder]) };
-        });
-    },
-    updateChart: function (chart) {
-        set(function (state) {
-            var folder = state.folders.find(function (f) { return f.charts.find(function (c) { return c.id === chart.id; }); });
-            var chartIndex = folder.charts.findIndex(function (c) { return c.id === chart.id; });
-            folder.charts[chartIndex] = chart;
-            return { folders: state.folders };
+            // ajoute le folder à lavant dernier index dans le table folders
+            var updatedFolders = __spreadArrays(state.folders);
+            updatedFolders.splice(updatedFolders.length - 1, 0, folder);
+            return { folders: updatedFolders };
         });
     },
     updateFolder: function (folder) {
@@ -35,6 +40,14 @@ var useFolderStore = zustand_1.create(function (set) { return ({
             var updatedFolders = __spreadArrays(state.folders);
             updatedFolders[folderIndex] = folder;
             return { folders: updatedFolders };
+        });
+    },
+    updateChart: function (chart) {
+        set(function (state) {
+            var folder = state.folders.find(function (f) { return f.charts.find(function (c) { return c.id === chart.id; }); });
+            var chartIndex = folder.charts.findIndex(function (c) { return c.id === chart.id; });
+            folder.charts[chartIndex] = __assign({}, chart);
+            return { folders: state.folders };
         });
     },
     addChart: function (chart) {
@@ -55,49 +68,6 @@ var useFolderStore = zustand_1.create(function (set) { return ({
             var chart = folder.charts.find(function (c) { return c.id === chartId; });
             var index = folder.charts.indexOf(chart);
             folder.charts.splice(index, 1);
-            return { folders: updatedFolders };
-        });
-    },
-    removeFolder: function (folderId) {
-        set(function (state) {
-            var updatedFolders = __spreadArrays(state.folders);
-            var folder = updatedFolders.find(function (f) { return f.id === folderId; });
-            var index = updatedFolders.indexOf(folder);
-            updatedFolders.splice(index, 1);
-            updatedFolders.forEach(function (f, i) {
-                console.log(f.order, index);
-                if (f.order > folder.order && !f.isShadow) {
-                    f.order--;
-                    action_1.updateFolderOrder(f.id, f.order);
-                }
-            });
-            return { folders: updatedFolders };
-        });
-    },
-    moveFolders: function (currentIndex, newIndex) {
-        set(function (state) {
-            var updatedFolders = __spreadArrays(state.folders);
-            var folder = updatedFolders.find(function (f) { return f.order === currentIndex; });
-            if (currentIndex > newIndex) {
-                updatedFolders.forEach(function (f) {
-                    if (f.order >= newIndex && f.order < currentIndex) {
-                        f.order++;
-                        action_1.updateFolderOrder(f.id, f.order);
-                    }
-                });
-                folder.order = newIndex;
-                action_1.updateFolderOrder(folder.id, newIndex);
-            }
-            else {
-                updatedFolders.forEach(function (f) {
-                    if (f.order < newIndex && f.order > currentIndex) {
-                        f.order--;
-                        action_1.updateFolderOrder(f.id, f.order);
-                    }
-                });
-                folder.order = newIndex - 1;
-                action_1.updateFolderOrder(folder.id, folder.order);
-            }
             return { folders: updatedFolders };
         });
     }

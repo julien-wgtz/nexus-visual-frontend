@@ -25,14 +25,14 @@ const ViewerChart: React.FC<ViewerChartProps> = ({chart}:ViewerChartProps) => {
 			setData(data);
 		});
 		const isInIframe = window.self !== window.top;
-		const bg = isInIframe ? "transparent" : themes[chart.config.theme].backgroundColor;
+		const bg = isInIframe ? "transparent" : (themes as any)[chart.config.theme].backgroundColor;
 		setBackgroundColor(bg)
 	}, [chart])
 
 	useEffect(() => {
 		if(data == null || data?.length === 0 ) return
-		const newData = {...data}
-		const newDataData = [...newData.data]
+		const newData: any = {...data}
+		const newDataData: any = [...newData.data]
 		const axeX = chart.config.dataSelected.filter((item: any) => item.axe === "X")[0]?.id
 		const axeXLabel = newData.properties.filter((item: any) => item.id === axeX)[0]?.name
 		const axeXType = newData.properties.filter((item: any) => item.id === axeX)[0]?.type
@@ -40,7 +40,7 @@ const ViewerChart: React.FC<ViewerChartProps> = ({chart}:ViewerChartProps) => {
 		if(orderStatus === "none") {
 			setDataOrder({...data})
 		} else {
-			const dataOrder = newDataData.sort((a, b) => { 
+			const dataOrder = newDataData.sort((a: any, b: any) => { 
 				if(orderStatus === "asc") {
 					if(axeXType === "date") {
 						return new Date(a[axeXLabel]).getTime() - new Date(b[axeXLabel]).getTime();
@@ -64,7 +64,7 @@ const ViewerChart: React.FC<ViewerChartProps> = ({chart}:ViewerChartProps) => {
 	return (
 		<div className='h-screen w-screen p-4' style={{backgroundColor: backgroundColor}}> 
 		{(chart && dataOrder) ? (
-			<Card className='h-full w-full aspect-video' style={{backgroundColor: themes[chart.config.theme].backgroundColor}}>
+			<Card className='h-full w-full aspect-video' style={{backgroundColor: (themes as any)[chart.config.theme].backgroundColor}}>
 				<CardContent className=' w-full h-full p-2'>
 					{chart.currentChartType === ChartType.BAR && (
 						<NexusBar data={dataOrder} config={chart.config}/>

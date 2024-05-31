@@ -18,7 +18,7 @@ interface FolderItemProps {
   index: number,
 }
 
-export const FolderItem = ({ index, folder }: FolderItemProps) => {
+const FolderItem = ({ index, folder }: FolderItemProps) => {
   const t = useTranslations('');
 
   const ref = useRef(null);
@@ -295,3 +295,5 @@ export const FolderItem = ({ index, folder }: FolderItemProps) => {
     </>
   );
 };
+
+export default FolderItem;

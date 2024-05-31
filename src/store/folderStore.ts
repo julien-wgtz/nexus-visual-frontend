@@ -1,10 +1,5 @@
-import { updateFolderOrder } from '@/components/nexus-app/Sidebar/action';
-import { fetchData } from '@/lib/fetch';
-import { setFips } from 'crypto';
-import { remove } from 'lodash';
-import { any } from 'zod';
 import { create } from 'zustand';
-import useDashboardStore from './dashboardStore';
+
 
 const useFolderStore = create((set) => ({
   folders: [],

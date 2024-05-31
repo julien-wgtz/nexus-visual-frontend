@@ -60,7 +60,6 @@ function useAuth() {
                         return [4 /*yield*/, response.json()];
                     case 2:
                         account = _a.sent();
-                        console.log(account);
                         return [3 /*break*/, 4];
                     case 3:
                         router.push('/login');
