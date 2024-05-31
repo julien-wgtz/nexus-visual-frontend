@@ -46,7 +46,7 @@ const SignInForm = () => {
     const { email, password } = values;
     try {
       const response = await fetchData(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}auth/signin`,
+        `${process.env.BACKEND_URL}auth/signin`,
         {
           body: JSON.stringify({
             email,
