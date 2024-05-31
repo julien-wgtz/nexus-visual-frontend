@@ -12,6 +12,8 @@ export const useAppStore = create(
       account: null,
       accountId: null,
       role: AccountStatus.FREE,
+      theme: '',
+      setTheme: (theme: string) => set({ theme }),
       setUser: (user: User) => set({ user }),
       setAccount: (account: Account) => {
         set({ 

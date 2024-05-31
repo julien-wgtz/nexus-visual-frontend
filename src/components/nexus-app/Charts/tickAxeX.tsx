@@ -1,15 +1,21 @@
+import { useLocale } from 'next-intl';
 import React, { useEffect, useState } from 'react';
 
 const CustomizedAxisTick = (props: any) => {
 	const { x, y, payload, type, styles } = props;
 	const [label, setLabel] = useState(payload.value)
-	
+	const locale = useLocale()
+
 	useEffect(() => {	
 		if(type == "date"){
 			const date = new Date(payload.value);
 			const month = (date.getMonth() + 1).toString().padStart(2, '0');
 			const day = date.getDate();
-			setLabel(`${day}/${month}`);
+			if(locale == "en") {
+				setLabel(`${month}/${day}`);
+			} else {
+				setLabel(`${day}/${month}`);
+			}
 		}
 	})
 

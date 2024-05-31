@@ -9,7 +9,7 @@ gulp.task("i18n", async () => {
     ])
     .pipe(
       new i18nextParser({
-        locales: ["en", "fr"],
+        locales: ["en", "fr", "es"],
         output:
           "public/locales/$LOCALE/$NAMESPACE.json",
       })

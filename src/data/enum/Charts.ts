@@ -1,7 +1,6 @@
 enum ChartType {
 	BAR = 'BAR',
-	LINE = 'LINE',
-	PIE = 'PIE'
+	LINE = 'LINE'
 }
 
 export default ChartType;

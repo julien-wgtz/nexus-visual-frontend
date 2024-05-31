@@ -46,66 +46,65 @@ var collapsible_1 = require("@/components/ui/collapsible");
 var lucide_react_1 = require("lucide-react");
 var dropdown_menu_1 = require("@/components/ui/dropdown-menu");
 var button_1 = require("@/components/ui/button");
-var action_1 = require("./action");
 var folderStore_1 = require("@/store/folderStore");
+var dashboardStore_1 = require("@/store/dashboardStore");
+var folder_1 = require("@/data/model/folder");
+var chart_1 = require("@/data/model/chart");
 exports.FolderItem = function (_a) {
-    var _b, _c;
-    var index = _a.index, folder = _a.folder, onCreateChart = _a.onCreateChart, onCreateFolder = _a.onCreateFolder, onRemoveFolder = _a.onRemoveFolder, foldersSort = _a.foldersSort;
+    var _b, _c, _d, _e, _f, _g;
+    var index = _a.index, folder = _a.folder;
     var t = next_intl_1.useTranslations('');
     var ref = react_1.useRef(null);
     var inputRef = react_1.useRef(null);
+    var chartApi = new chart_1["default"]();
+    var setOpenDialogCreateChart = dashboardStore_1["default"](function (state) { return state.setDialogIsOpen; });
+    var setDataForChart = dashboardStore_1["default"](function (state) { return state.setDataForChart; });
+    var folderApi = new folder_1["default"]();
+    var currentFolder = dashboardStore_1["default"](function (state) { return state.currentFolder; });
+    var currentChart = dashboardStore_1["default"](function (state) { return state.currentChart; });
+    var resetCurrentChart = dashboardStore_1["default"](function (state) { return state.resetCurrentChart; });
     var updateFolder = folderStore_1["default"](function (state) { return state.updateFolder; });
-    var _d = react_1.useState(false), isOpened = _d[0], setIsOpened = _d[1];
-    var _e = react_1.useState(false), isEditing = _e[0], setIsEditing = _e[1];
-    var _f = react_1.useState(folder.name), folderName = _f[0], setFolderName = _f[1];
-    var _g = react_dnd_1.useDrop({
-        accept: 'folder',
+    var setFolders = folderStore_1["default"](function (state) { return state.setFolders; });
+    var _h = react_1.useState(currentFolder == folder.id), isOpened = _h[0], setIsOpened = _h[1];
+    var _j = react_1.useState(false), isEditing = _j[0], setIsEditing = _j[1];
+    var _k = react_1.useState(folder.name), folderName = _k[0], setFolderName = _k[1];
+    var _l = react_dnd_1.useDrop({
+        accept: ['folder', 'chart'],
         drop: function (item, monitor) {
             if (!ref.current) {
                 return;
             }
-            console.log("ITEM", item, index);
-            // const dragIndex = item.index;
-            // const hoverIndex = index;
-            // // Don't replace items with themselves
-            // if (dragIndex !== hoverIndex) {
-            //   moveFolders(dragIndex, hoverIndex);
-            // }
+            var indexOrigine = item.index;
+            var indexDestination = index;
+            var effect = monitor.getDropResult();
+            if (!item.folderId) {
+                folderApi.updateFolderOrder(indexOrigine, indexDestination).then(function (newFolders) {
+                    setFolders(newFolders);
+                });
+            }
+            else {
+                if (effect === null) {
+                    chartApi.updateChartOrder(item.index, 0, item.folderId, folder.id).then(function (newFolders) {
+                        setFolders(newFolders);
+                        setIsOpened(true);
+                    });
+                }
+            }
         },
         collect: function (monitor) { return ({
-            isOver: monitor.isOver()
+            isOverLine: monitor.isOver() && monitor.getItemType() === 'folder',
+            isOverFolder: monitor.isOver() && monitor.getItemType() === 'chart'
         }); }
-    }), isOver = _g[0].isOver, drop = _g[1];
-    var _h = react_dnd_1.useDrag({
+    }), _m = _l[0], isOverLine = _m.isOverLine, isOverFolder = _m.isOverFolder, drop = _l[1];
+    var _o = react_dnd_1.useDrag({
         type: 'folder',
         item: { folder: folder, index: index },
         canDrag: !folder.isShadow,
         collect: function (monitor) { return ({
             isDragging: monitor.isDragging()
         }); }
-    }, [folder, index]), drag = _h[1];
+    }, [folder, index]), _p = _o[0], drag = _o[1];
     drag(drop(ref));
-    var editFolder = function (event) {
-        event.stopPropagation();
-        setIsEditing(true);
-    };
-    var handleOnBlur = function () { return __awaiter(void 0, void 0, void 0, function () {
-        var _a, _b;
-        return __generator(this, function (_c) {
-            switch (_c.label) {
-                case 0:
-                    if (folder.name === ((_a = inputRef === null || inputRef === void 0 ? void 0 : inputRef.current) === null || _a === void 0 ? void 0 : _a.value)) {
-                        setIsEditing(false);
-                        return [2 /*return*/];
-                    }
-                    return [4 /*yield*/, action_1.renameFolder((_b = inputRef === null || inputRef === void 0 ? void 0 : inputRef.current) === null || _b === void 0 ? void 0 : _b.value, folder.id, updateFolder)];
-                case 1:
-                    _c.sent();
-                    setIsEditing(false);
-                    return [2 /*return*/];
-            }
-        });
-    }); };
     react_1.useEffect(function () {
         var handleKeyDown = function (event) {
             if (event.key === 'Enter' && inputRef.current) {
@@ -119,24 +118,65 @@ exports.FolderItem = function (_a) {
         };
     }, []);
     react_1.useEffect(function () {
+        if (!isOpened)
+            setIsOpened(currentFolder == folder.id);
+    }, [currentFolder]);
+    react_1.useEffect(function () {
         setTimeout(function () {
-            var _a;
+            var input = inputRef === null || inputRef === void 0 ? void 0 : inputRef.current;
             if (isEditing && inputRef.current) {
-                (_a = inputRef === null || inputRef === void 0 ? void 0 : inputRef.current) === null || _a === void 0 ? void 0 : _a.focus();
+                input.focus();
             }
         }, 180);
     }, [isEditing]);
+    var editFolder = function (event) {
+        event.stopPropagation();
+        setIsEditing(true);
+    };
+    var handleOnBlur = function () { return __awaiter(void 0, void 0, void 0, function () {
+        var input, folderRename;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    input = inputRef === null || inputRef === void 0 ? void 0 : inputRef.current;
+                    if (folder.name === input.value) {
+                        setIsEditing(false);
+                        return [2 /*return*/];
+                    }
+                    folder.name = input.value;
+                    return [4 /*yield*/, folderApi.updateFolder(folder)];
+                case 1:
+                    folderRename = _a.sent();
+                    updateFolder(folderRename);
+                    setIsEditing(false);
+                    return [2 /*return*/];
+            }
+        });
+    }); };
     var handleCreateChart = function (e) {
         var _a;
         e.stopPropagation();
-        onCreateChart(folder.id, (_a = folder.charts) === null || _a === void 0 ? void 0 : _a.length);
+        setDataForChart({ id: folder.id, order: (_a = folder.charts) === null || _a === void 0 ? void 0 : _a.length });
+        setOpenDialogCreateChart(true);
+    };
+    var onRemoveFolder = function () {
+        folderApi.deleteFolder(folder.id).then(function (newFolder) {
+            setFolders(newFolder);
+        });
+    };
+    var onRemoveFolderWithCharts = function () {
+        folderApi.deleteFolderWithCharts(folder.id).then(function (newFolder) {
+            setFolders(newFolder);
+            if (currentChart.folderId == folder.id)
+                resetCurrentChart(undefined);
+        });
     };
     return (React.createElement(React.Fragment, null,
-        React.createElement("div", { className: "border-t-[2px] " + (isOver ? 'border-indigo-400' : 'border-transparent') }),
-        !folder.isShadow ? (React.createElement(collapsible_1.Collapsible, { ref: ref, open: isOpened, onOpenChange: function () { return setIsOpened(!isOpened); }, className: "w-full collapsible-menu-sidebar", key: "folder-" + folder.id },
-            React.createElement("div", { className: "flex items-center justify-between space-x-4" },
+        React.createElement("div", { className: "border-t-[2px] " + (isOverLine ? 'border-indigo-400' : 'border-transparent') }),
+        !folder.isShadow ? (React.createElement(collapsible_1.Collapsible, { ref: ref, open: isOpened || isOverFolder, onOpenChange: function () { return setIsOpened(!isOpened); }, className: "w-full collapsible-menu-sidebar", key: "folder-" + folder.id },
+            React.createElement("div", { className: "flex items-center justify-between space-x-4 " + (isOverFolder ? "bg-muted" : "") },
                 React.createElement(collapsible_1.CollapsibleTrigger, { asChild: true },
-                    React.createElement("div", { className: "itemFolder flex justify-between items-center w-full cursor-pointer hover:bg-muted/85 px-4" },
+                    React.createElement("div", { className: "itemFolder flex justify-between items-center w-full cursor-pointer hover:bg-muted/85 pl-4" },
                         React.createElement("div", { className: "flex justify-start items-center" },
                             React.createElement(lucide_react_1.ChevronRight, { className: "icon-chevron", size: 16 }),
                             React.createElement("div", { className: "flex" }, isEditing ? (React.createElement("input", { ref: inputRef, className: "text-sm font-normal rounded bg-muted p-1 pl-2", type: "text", value: folderName, onChange: function (e) {
@@ -150,215 +190,24 @@ exports.FolderItem = function (_a) {
                                 React.createElement(dropdown_menu_1.DropdownMenuGroup, null,
                                     React.createElement(dropdown_menu_1.DropdownMenuItem, { className: "DropdownMenuItem", onClick: function (event) { return handleCreateChart(event); } }, t('chart.newChartLong')),
                                     React.createElement(dropdown_menu_1.DropdownMenuItem, { className: "DropdownMenuItem", onClick: editFolder }, t('chart.renameFolder')),
-                                    React.createElement(dropdown_menu_1.DropdownMenuItem, { className: "DropdownMenuItem", onClick: function (event) {
-                                            event.stopPropagation();
-                                            onRemoveFolder(index);
-                                        } }, t('chart.removeFolder')))))))),
-            React.createElement(collapsible_1.CollapsibleContent, { className: "w-full" }, (_b = folder.charts) === null || _b === void 0 ? void 0 : _b.map(function (chart, index) { return (React.createElement(ChartItem_1["default"], { key: index, index: index, chart: chart, folderId: folder.id })); })))) : (React.createElement(context_menu_1.ContextMenu, null,
+                                    React.createElement(dropdown_menu_1.DropdownMenuSub, null,
+                                        React.createElement(dropdown_menu_1.DropdownMenuSubTrigger, { className: "DropdownMenuSubTrigger" }, t("chart.delete")),
+                                        React.createElement(dropdown_menu_1.DropdownMenuPortal, null,
+                                            React.createElement(dropdown_menu_1.DropdownMenuSubContent, null,
+                                                React.createElement(dropdown_menu_1.DropdownMenuItem, { className: "DropdownMenuItem", onClick: function (event) {
+                                                        event.stopPropagation();
+                                                        onRemoveFolder();
+                                                    } }, t('chart.removeFolder')),
+                                                React.createElement(dropdown_menu_1.DropdownMenuItem, { className: "DropdownMenuItem", onClick: function (event) {
+                                                        event.stopPropagation();
+                                                        onRemoveFolderWithCharts();
+                                                    } }, t('chart.removeFolderWithCharts'))))))))))),
+            React.createElement(collapsible_1.CollapsibleContent, { className: "w-full" }, (_b = folder.charts) === null || _b === void 0 ? void 0 :
+                _b.map(function (chart, index) { return (React.createElement(ChartItem_1["default"], { key: index, index: index, chart: chart, folderId: folder.id })); }),
+                React.createElement(ChartItem_1["default"], { key: (_c = folder === null || folder === void 0 ? void 0 : folder.charts) === null || _c === void 0 ? void 0 : _c.length, index: (_d = folder === null || folder === void 0 ? void 0 : folder.charts) === null || _d === void 0 ? void 0 : _d.length, folderId: folder.id })))) : (React.createElement(context_menu_1.ContextMenu, null,
             React.createElement(context_menu_1.ContextMenuTrigger, { className: 'flex flex-col h-full w-full min-h-4' },
-                React.createElement("div", { ref: ref, draggable: false, className: "w-full h-[100%] " },
-                    React.createElement("div", { className: 'w-full' }, (_c = folder.charts) === null || _c === void 0 ? void 0 : _c.map(function (chart, index) { return (React.createElement(ChartItem_1["default"], { key: index, index: index, chart: chart, folderId: folder.id, isShadow: true })); })))),
-            React.createElement(context_menu_1.ContextMenuContent, { className: "ContextMenuContent" },
-                React.createElement(context_menu_1.ContextMenuItem, { className: "ContextMenuItem", onClick: function () { var _a, _b, _c; onCreateChart((_a = foldersSort[foldersSort.length - 1]) === null || _a === void 0 ? void 0 : _a.id, (_c = (_b = foldersSort[foldersSort.length - 1]) === null || _b === void 0 ? void 0 : _b.charts) === null || _c === void 0 ? void 0 : _c.length); } }, t('chart.newChartLong')),
-                React.createElement(context_menu_1.ContextMenuItem, { className: "ContextMenuItem", onClick: onCreateFolder }, t('chart.newFolderLong')))))));
+                React.createElement("div", { ref: ref, draggable: false, className: "w-full h-[100%]  pb-48" },
+                    React.createElement("div", { className: 'w-full' }, (_e = folder.charts) === null || _e === void 0 ? void 0 :
+                        _e.map(function (chart, index) { return (React.createElement(ChartItem_1["default"], { key: index, index: index, chart: chart, folderId: folder.id, isShadow: true })); }),
+                        React.createElement(ChartItem_1["default"], { key: (_f = folder === null || folder === void 0 ? void 0 : folder.charts) === null || _f === void 0 ? void 0 : _f.length, index: (_g = folder === null || folder === void 0 ? void 0 : folder.charts) === null || _g === void 0 ? void 0 : _g.length, folderId: folder.id }))))))));
 };
-// const t = useTranslations('chart');
-//   const moveFolders = useFolderStore((state) => state.moveFolders);
-//   const removeFolderStore = useFolderStore((state) => state.removeFolder);
-//   const currentFolder = useDashboardStore((state) => state.currentFolder);
-//   const ref = useRef(null);
-//   const [isOpened, setIsOpened] = useState(false);
-//   const inputRef = useRef<HTMLInputElement>(null);
-//   const [folderName, setFolderName] = useState(folder.name);
-//   const [isEditing, setIsEditing] = useState(false);
-//   useEffect(() => {
-//     document.addEventListener('click', handleClick);
-//     return () => {
-//       document.removeEventListener('click', handleClick);
-//     };
-//   }, [isEditing]);
-//   useEffect(() => {
-//     if(!isOpened) setIsOpened(currentFolder == id);
-//   }, [currentFolder])
-//   const [{ isOver }, drop] = useDrop({
-//     accept: 'folder',
-//     drop(item, monitor) {
-//       if (!ref.current) {
-//         return;
-//       }
-//       const dragIndex = item.index;
-//       const hoverIndex = index;
-//       // Don't replace items with themselves
-//       if (dragIndex !== hoverIndex) {
-//         moveFolders(dragIndex, hoverIndex);
-//       }
-//     },
-//     collect: (monitor) => ({
-//       isOver: monitor.isOver(),
-//     }),
-//   });
-//   const [, drag] = useDrag(
-//     {
-//       type: 'folder',
-//       item: { id, index },
-//       canDrag: !folder.isShadow,
-//       collect: (monitor: DragSourceMonitor) => ({
-//         isDragging: monitor.isDragging(),
-//       }),
-//     },
-//     [folder, index]
-//   );
-//   drag(drop(ref));
-//   const handleClick = (event: any) => {
-//     if (inputRef.current && !inputRef.current.contains(event.target)) {
-//       setIsEditing(false);
-//     }
-//   };
-//   const editFolder = (event: any) => {
-//     event.stopPropagation();
-//     setIsEditing(true);
-//   };
-//   const handleOnBlur = () => {
-//     //Update name in db
-//     const fetchDataAsync = async () => {
-//       try {
-//         const response = await fetchData(
-//           `${process.env.NEXT_PUBLIC_BACKEND_URL}charts/rename-folder`,
-//           {
-//             body: JSON.stringify({
-//               id: folder.id,
-//               name: folderName,
-//             }),
-//           }
-//         );
-//         if (response.ok) {
-//           setIsEditing(false);
-//         } else {
-//           console.error('Failed to update folder name');
-//         }
-//       } catch (error) {
-//         console.error('An error occurred', error);
-//       }
-//     };
-//     if (folder.name === folderName) return;
-//     folder.name = folderName;
-//     fetchDataAsync();
-//   };
-//   const handleCreateChart =  (e: any) => {
-//     e.stopPropagation();
-//     onCreateChart(folder.id, folder.charts?.length)
-//   }
-{ /* <div
-className={`border-t-[2px] ${
-  isOver ? 'border-indigo-400' : 'border-transparent'
-}`}
-/>
-{!folder.isShadow ? (
-<Collapsible
-  onDoubleClick={(e) => {
-    e.stopPropagation();
-  }}
-  ref={ref}
-  open={isOpened}
-  onOpenChange={() => setIsOpened(!isOpened)}
-  className="w-full collapsible-menu-sidebar"
-  key={`folder-${id}`}
->
-  <div className="flex items-center justify-between space-x-4">
-    <CollapsibleTrigger asChild>
-      <div className="flex justify-between items-center w-full cursor-pointer hover:bg-muted/85 px-4">
-        <div className="flex justify-start items-center">
-          <ChevronRight className="icon-chevron" size={16} />
-          <div className="flex">
-            {isEditing ? (
-              <input
-                ref={inputRef}
-                className="text-sm font-normal rounded bg-muted p-1 pl-2"
-                type="text"
-                value={folderName}
-                onClick={(e) => e.stopPropagation()}
-                onChange={(e) => {
-                  setFolderName(e.target.value);
-                }}
-                onBlur={handleOnBlur}
-                autoFocus
-              />
-            ) : (
-              <h4 className="p-1 pl-2 text-sm font-normal">
-                {folder.name}
-              </h4>
-            )}
-          </div>
-        </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className=" hover:bg-transparent focus:outline-none focus-visible:ring-0"
-            >
-              <Ellipsis className="ellipseButton hidden" size={16} />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            className="DropdownMenuContent"
-            side="bottom"
-            align="start"
-          >
-            <DropdownMenuGroup>
-              <DropdownMenuItem
-                className="DropdownMenuItem"
-                onClick={editFolder}
-              >
-                {t('renameFolder')}
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="DropdownMenuItem"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  removeFolder(folder.id, removeFolderStore);
-                }}
-              >
-                {t('removeFolder')}
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                  className="DropdownMenuItem"
-                  onClick={(event) => handleCreateChart(event)}
-                >
-                  {t('newChartLong')}
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-    </CollapsibleTrigger>
-  </div>
-  <CollapsibleContent className="w-full">
-    {folder.charts?.map((chart: any, index: number) => (
-      <FolderItem
-        key={index}
-        title={chart.title}
-        index={index}
-        id={chart.id}
-        folderId={folder.id}
-      />
-    ))}
-  </CollapsibleContent>
-</Collapsible>
-) : (
-<div ref={ref} draggable={false} className="w-full h-[100%]">
-  <div className='w-full'>
-  {folder.charts?.map((chart: any, index: number) => (
-      <FolderItem
-        key={index}
-        title={chart.title}
-        index={index}
-        id={chart.id}
-        folderId={folder.id}
-      />
-    ))}
-  </div>
-</div>
-)}
-</>  */
-}

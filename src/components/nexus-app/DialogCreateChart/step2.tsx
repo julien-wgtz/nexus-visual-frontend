@@ -23,7 +23,7 @@ interface Step2CreateChartProps {
 const Step2CreateChart: React.FC<Step2CreateChartProps> = ({setChart, chartDatabase}) => {
 	const t = useTranslations('chart');
 
-	const account: any = useAppStore((state) => state.account);
+	const account: any = useAppStore((state: any) => state.account);
 
 	const [database, setDatabase] = useState<any>(null);
 	const [databaseSelected, setDatabaseSelected] = useState<any>(chartDatabase);

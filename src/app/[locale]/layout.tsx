@@ -5,6 +5,8 @@ import {
 } from "next-intl";
 
 import "../globals.css";
+import { Toaster } from "@/components/ui/toaster";
+import { useAppStore } from "@/store/appStore";
 
 export const metadata: Metadata = {
   title: "Nexus",
@@ -22,10 +24,8 @@ export default function LocalLayout({
 
   return (
     <NextIntlClientProvider messages={messages}>
-      <html lang={locale} className="dark">
-        <body className="flex flex-col items-center h-screen">
+      <html lang={locale}>
           {children}
-        </body>
       </html>
     </NextIntlClientProvider>
   );

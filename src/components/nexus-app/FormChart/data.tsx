@@ -11,6 +11,7 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import ChartsApi from '@/data/model/chart';
 import { set, update } from 'lodash';
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface Props {
 	properties: any;
@@ -20,11 +21,12 @@ const DataForm: React.FC<Props> = ({ properties }) => {
 
 	const t = useTranslations("EditorChart")
 	const chartApi = new ChartsApi();
-	const currentChart = useDashboardStore((state) => state.currentChart);
-	const configChart = useDashboardStore((state) => state.configChart);
-	const setConfigChart = useDashboardStore((state) => state.setConfigChart);
-	const [axeXSelected, setAxeXSelected] = useState("")
-	const [axeYSelected, setAxeYSelected] = useState([])
+	const currentChart = useDashboardStore((state: any) => state.currentChart);
+	const configChart = useDashboardStore((state: any) => state.configChart);
+	const setConfigChart = useDashboardStore((state: any) => state.setConfigChart);
+	const [axeXSelected, setAxeXSelected] = useState<any>("")
+	const [axeYSelected, setAxeYSelected] = useState<any>([])
+	const [orderAxeX, setOrderAxeX] = useState("none")
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(()=> {
@@ -34,11 +36,14 @@ const DataForm: React.FC<Props> = ({ properties }) => {
 				if(item.axe == "X") {
 					setAxeXSelected(item.id)
 				} else if(item.axe == "Y") {
-					const newArray = axeYSelected
+					const newArray: any = axeYSelected
 					newArray.push(item.id)
 					setAxeYSelected([...newArray])
 				}
 			})
+		}
+		if(configChart.axeX.order) {
+			setOrderAxeX(configChart.axeX.order)
 		}
 		isLoading && setIsLoading(false)
 	}, [])
@@ -62,6 +67,13 @@ const DataForm: React.FC<Props> = ({ properties }) => {
 			}
 		}
 
+		setConfigChart({...configChart})
+	}
+
+	const onOrderAxeX = (value: any) => {
+		if(!value) return;
+		configChart.axeX.order = value
+		setOrderAxeX(value)
 		setConfigChart({...configChart})
 	}
 
@@ -90,7 +102,7 @@ const DataForm: React.FC<Props> = ({ properties }) => {
 
 	const removeSeries = (e: any, itemId: string) => {
 		e.preventDefault();
-		const newArray = axeYSelected.filter((item) => item !== itemId)
+		const newArray = axeYSelected.filter((item: any) => item !== itemId)
 		setAxeYSelected(newArray)
 		const newDataSelected = configChart.dataSelected.filter((item: any) => {
 			return item.id !== itemId
@@ -106,17 +118,17 @@ const DataForm: React.FC<Props> = ({ properties }) => {
 				{t("chart.data")}
 			</legend>
 			<div className="grid gap-3">
-				<Label htmlFor="axeX">Axe X</Label>
+				<Label htmlFor="axeX">{t("axeX")}</Label>
 				{!isLoading && (
 					<Select name="axeX" value={axeXSelected} onValueChange={value => setAxeXSelected(value)}>
 						<SelectTrigger
 							id="axeX"
 							className="items-start [&_[data-description]]:hidden"
 						>
-							<SelectValue placeholder="Sélectionner axe X" />
+							<SelectValue placeholder={t("selectX")} />
 						</SelectTrigger>
 					<SelectContent>
-					{properties.map((property: any) => (
+					{properties?.map((property: any) => (
 							<SelectItem key={property.id} value={property.id}>
 								<div className="flex items-start gap-3 text-muted-foreground">
 								<div className="grid gap-0.5">
@@ -130,6 +142,19 @@ const DataForm: React.FC<Props> = ({ properties }) => {
 					</SelectContent>
 					</Select>
 				)}
+				{!isLoading && axeXSelected && (
+					<ToggleGroup value={orderAxeX} onValueChange={(value) => onOrderAxeX(value)} id="order" type="single" variant="outline" className='flex gap-2 justify-start'>
+						<ToggleGroupItem name='order' value="none" aria-label="Toggle bold">
+							<X className="h-4 w-4" />
+						</ToggleGroupItem>
+						<ToggleGroupItem name='order' value="asc" >
+							ASC
+						</ToggleGroupItem>
+						<ToggleGroupItem name='order' value="desc">
+							DESC
+						</ToggleGroupItem>
+					</ToggleGroup>
+				)}
 			</div>
 			<div className="grid gap-3">
 				<Label htmlFor="axeX">Série</Label>
@@ -141,10 +166,10 @@ const DataForm: React.FC<Props> = ({ properties }) => {
 								id="axeY"
 								className="items-start [&_[data-description]]:hidden"
 							>
-								<SelectValue placeholder="Sélectionner une série" />
+								<SelectValue placeholder={t("selectSerie")} />
 							</SelectTrigger>
 						<SelectContent>
-						{properties.map((property: any) => (
+						{properties?.map((property: any) => (
 							<div key={property.id}>
 								{((axeYSelected.includes(property.id)) && property.id !== axeY) || property.id == axeXSelected ? null : (
 									<SelectItem value={property.id}>
@@ -166,7 +191,18 @@ const DataForm: React.FC<Props> = ({ properties }) => {
 						</Button>
 					</div>
 				))}
-				<Button variant="secondary" onClick={(e) => {e.preventDefault(); setAxeYSelected([...axeYSelected, ""])}}>Ajouter une série</Button>
+				<TooltipProvider>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<div className='w-full'>
+								<Button variant="secondary" className='w-full' disabled={axeYSelected.length >= 8} onClick={(e) => {e.preventDefault(); setAxeYSelected([...axeYSelected, ""])}}>{t("addSeries")}</Button>
+							</div>
+						</TooltipTrigger>
+						<TooltipContent>
+						 {axeYSelected.length >= 8 ? t("maxSeries") : t("addSeries")}
+						</TooltipContent>
+					</Tooltip>
+				</TooltipProvider>
 			</div>
 		</fieldset>
 	  </form>

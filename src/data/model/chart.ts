@@ -131,7 +131,56 @@ class ChartsApi {
 		} catch (error) {
 			throw new Error('Failed to get chart data');
 		}
-	}	
+	}
+
+	async getChartDataFromToken({shareToken} : Charts): Promise<Charts> {
+		try {
+			const response = await fetchData(`${this.baseUrl}get-data-from-token`, {
+				body: JSON.stringify({
+					shareToken
+				}),
+			
+			});
+			if(response.ok) {
+				const data = await response.json();
+				return data;
+			}
+			throw new Error('Failed to get chart data');
+		} catch (error) {
+			throw new Error('Failed to get chart data');
+		}
+	}
+
+	async getChartFromToken({shareToken} : Charts): Promise<Charts> {
+		try {
+			const response = await fetchData(`${this.baseUrl}get-chart-from-token`, {
+				body: JSON.stringify({
+					shareToken
+				}),
+			});
+			const chart = await response.json();
+			return chart;
+		} catch (error) {
+			console.error('Error while getting chart:', error);
+			throw error;
+		}
+	}
+
+	async regenerateToken({id} : Charts): Promise<Charts> {
+		try {
+			const response = await fetchData(`${this.baseUrl}regenerate-token`, {
+				body: JSON.stringify({
+					chartId: id
+				}),
+			});
+			const chart = await response.json();
+			return chart;
+		} catch (error) {
+			console.error('Error while getting chart:', error);
+			throw error;
+		}
+	}
+
 }
 
 export default ChartsApi;

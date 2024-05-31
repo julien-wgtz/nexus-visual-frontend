@@ -11,6 +11,7 @@ const useDashboardStore = create( persist((set, get) => ({
 			return { currentChart: {...chart}, currentFolder: chart.folderId}
 		})
 	},
+	resetCurrentChart: () => set({ currentChart: null, configChart: null}),
 	currentFolder: null,
 	setCurrentFolder: (folder: any) => set({ currentFolder: folder }),
 	dataForChart: null,
@@ -19,8 +20,7 @@ const useDashboardStore = create( persist((set, get) => ({
 		dataForChart: null,
 		currentChart: null,
 		currentFolder: null,
-		dialogIsOpen: false,
-		ImageChart: null,
+		dialogIsOpen: false
 	}),
 	configChart: null,
 	setConfigChart: (config: any) => set({ configChart: config}),

@@ -22,16 +22,16 @@ interface CreateChartDialogProps {
 const CreateChartDialog: React.FC<CreateChartDialogProps> = ({}) => {
 	const t = useTranslations('');
 
-	const account = useAppStore((state) => state.account);
+	const account = useAppStore((state: any) => state.account);
 
 	const chartApi = new ChartsApi();
-	const dataForChart = useDashboardStore((state) => state.dataForChart);
-	const addChart = useFolderStore((state) => state.addChart);
-	const setCurrentChart = useDashboardStore((state) => state.setCurrentChart);
-	const setCurrentFolder = useDashboardStore((state) => state.setCurrentFolder);
+	const dataForChart = useDashboardStore((state: any) => state.dataForChart);
+	const addChart = useFolderStore((state: any) => state.addChart);
+	const setCurrentChart = useDashboardStore((state: any) => state.setCurrentChart);
+	const setCurrentFolder = useDashboardStore((state: any) => state.setCurrentFolder);
 
-	const isOpen = useDashboardStore((state) => state.dialogIsOpen);
-	const setIsOpen = useDashboardStore((state) => state.setDialogIsOpen);
+	const isOpen = useDashboardStore((state: any) => state.dialogIsOpen);
+	const setIsOpen = useDashboardStore((state: any) => state.setDialogIsOpen);
 	
 
 	const [chart, setChart] = useState<any>({});

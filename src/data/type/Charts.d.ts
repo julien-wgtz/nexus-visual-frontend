@@ -6,5 +6,7 @@ export type Charts = {
 	folderId?: number;
 	databaseId?: string;
 	type?: ChartType;
-	config?: any
+	currentChartType?: ChartType;
+	config?: any;
+	shareToken?: string;
 };

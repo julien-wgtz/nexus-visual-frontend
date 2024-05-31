@@ -43,68 +43,71 @@ var lucide_react_1 = require("lucide-react");
 var next_intl_1 = require("next-intl");
 var react_1 = require("react");
 var react_dnd_1 = require("react-dnd");
-var action_1 = require("./action");
 var folderStore_1 = require("@/store/folderStore");
+var chart_1 = require("@/data/model/chart");
 var ChartItem = function (_a) {
     var index = _a.index, chart = _a.chart, folderId = _a.folderId, isShadow = _a.isShadow;
     var t = next_intl_1.useTranslations("");
+    var chartApi = new chart_1["default"]();
     var currentChart = dashboardStore_1["default"](function (state) { return state.currentChart; });
     var setCurrentChart = dashboardStore_1["default"](function (state) { return state.setCurrentChart; });
-    var removeChart = folderStore_1["default"](function (state) { return state.removeChart; });
-    var updateChart = folderStore_1["default"](function (state) { return state.updateChart; });
+    var resetCurrentChart = dashboardStore_1["default"](function (state) { return state.resetCurrentChart; });
+    var updateFolder = folderStore_1["default"](function (state) { return state.updateFolder; });
+    var setFolders = folderStore_1["default"](function (state) { return state.setFolders; });
     var _b = react_1.useState(false), isEditing = _b[0], setIsEditing = _b[1];
-    var _c = react_1.useState(chart.title), chartName = _c[0], setChartName = _c[1];
+    var _c = react_1.useState((chart === null || chart === void 0 ? void 0 : chart.title) || ""), chartName = _c[0], setChartName = _c[1];
     var inputRef = react_1.useRef(null);
     var ref = react_1.useRef(null);
     var _d = react_dnd_1.useDrop({
-        accept: 'files',
+        accept: 'chart',
         drop: function (item, monitor) {
             if (!ref.current) {
                 return;
             }
-            var dragIndex = item.index;
-            var hoverIndex = index;
-            if (dragIndex !== hoverIndex) {
-                // TODO Réorganiser le chart dans le folder et dans les autres folders si déplacé
-                // moveFolders(dragIndex, hoverIndex);
-            }
+            chartApi.updateChartOrder(item.index, index, item.folderId, folderId).then(function (newFolders) {
+                setFolders(newFolders);
+            });
         },
         collect: function (monitor) { return ({
             isOver: monitor.isOver()
         }); }
     }), isOver = _d[0].isOver, drop = _d[1];
     var _e = react_dnd_1.useDrag({
-        type: 'files',
+        type: 'chart',
         item: { chart: chart, index: index, folderId: folderId },
+        canDrag: function () { return chart !== undefined; },
+        isDragging: function (monitor) { return monitor.getItem().chart.id === (chart === null || chart === void 0 ? void 0 : chart.id); },
         collect: function (monitor) { return ({
             isDragging: monitor.isDragging()
         }); }
-    }, [folderId, index]), drag = _e[1];
+    }, [folderId, index]), isDragging = _e[0].isDragging, drag = _e[1];
     drag(drop(ref));
     var onDeleteChart = function (event) {
-        event.stopPropagation();
-        action_1.deleteChart(chart.id);
-        removeChart(chart.id);
+        chartApi.deleteChart({ id: chart.id }).then(function (res) {
+            updateFolder(res);
+            resetCurrentChart(undefined);
+        });
     };
     var editChart = function (event) {
         event.stopPropagation();
         setIsEditing(true);
     };
     var handleOnBlur = function () { return __awaiter(void 0, void 0, void 0, function () {
-        var _a, _b;
-        return __generator(this, function (_c) {
-            switch (_c.label) {
-                case 0:
-                    if (chart.name === ((_a = inputRef === null || inputRef === void 0 ? void 0 : inputRef.current) === null || _a === void 0 ? void 0 : _a.value)) {
-                        setIsEditing(false);
-                        return [2 /*return*/];
-                    }
-                    return [4 /*yield*/, action_1.renameChart((_b = inputRef === null || inputRef === void 0 ? void 0 : inputRef.current) === null || _b === void 0 ? void 0 : _b.value, chart.id, updateChart)];
-                case 1:
-                    _c.sent();
-                    setIsEditing(false);
-                    return [2 /*return*/];
+        var input;
+        return __generator(this, function (_a) {
+            input = inputRef === null || inputRef === void 0 ? void 0 : inputRef.current;
+            if (chart.title === input.value) {
+                setIsEditing(false);
+                return [2 /*return*/];
             }
+            chart.title = input.value;
+            chartApi.updateChart(chart).then(function (res) {
+                if (currentChart.id === chart.id) {
+                    setCurrentChart(res);
+                }
+            });
+            setIsEditing(false);
+            return [2 /*return*/];
         });
     }); };
     react_1.useEffect(function () {
@@ -114,25 +117,26 @@ var ChartItem = function (_a) {
                 handleOnBlur();
             }
         };
-        document.addEventListener('keydown', handleKeyDown);
+        setTimeout(function () {
+            var input = inputRef === null || inputRef === void 0 ? void 0 : inputRef.current;
+            if (isEditing && inputRef.current) {
+                input.focus();
+                document.addEventListener('keydown', handleKeyDown);
+            }
+        }, 180);
         return function () {
             document.removeEventListener('keydown', handleKeyDown);
         };
-    }, []);
-    react_1.useEffect(function () {
-        setTimeout(function () {
-            var _a;
-            if (isEditing && inputRef.current) {
-                (_a = inputRef === null || inputRef === void 0 ? void 0 : inputRef.current) === null || _a === void 0 ? void 0 : _a.focus();
-            }
-        }, 180);
     }, [isEditing]);
+    react_1.useEffect(function () {
+        setChartName(chart === null || chart === void 0 ? void 0 : chart.title);
+    }, [chart]);
     return (react_1["default"].createElement(react_1["default"].Fragment, null,
         react_1["default"].createElement("div", { style: { border: "1px solid " + (isOver ? 'blue' : 'transparent') } }),
-        react_1["default"].createElement("div", { ref: ref, "data-selected": currentChart.id == chart.id, className: "group/item itemChart flex justify-between items-center w-full cursor-pointer hover:bg-muted/85 " + (isShadow ? "" : "px-4") + " data-[selected=true]:bg-muted/70", onClick: function () { return setCurrentChart(chart); } },
+        react_1["default"].createElement("div", { ref: ref, "data-selected": chart !== undefined && (currentChart === null || currentChart === void 0 ? void 0 : currentChart.id) == (chart === null || chart === void 0 ? void 0 : chart.id), className: "group/item itemChart flex justify-between items-center w-full  " + (isDragging || !chart ? "" : "hover:bg-muted/85 cursor-pointer") + " " + (isShadow ? "" : "pl-4") + " data-[selected=true]:bg-muted/70", onClick: function () { return setCurrentChart(chart); } }, chart ? (react_1["default"].createElement(react_1["default"].Fragment, null,
             isEditing ? (react_1["default"].createElement("input", { ref: inputRef, className: "text-xs font-normal rounded bg-muted p-1 pl-2 ml-8", type: "text", value: chartName, onChange: function (e) {
                     setChartName(e.target.value);
-                }, onBlur: handleOnBlur })) : (react_1["default"].createElement("h5", { className: "w-full flex justify-start text-xs font-normal rounded-none px-10 hover:bg-inherit" }, chartName)),
+                }, onBlur: handleOnBlur })) : (react_1["default"].createElement("h5", { className: "w-full flex justify-start text-xs font-normal rounded-none pl-10 hover:bg-inherit" }, chartName)),
             react_1["default"].createElement(dropdown_menu_1.DropdownMenu, null,
                 react_1["default"].createElement(dropdown_menu_1.DropdownMenuTrigger, { asChild: true },
                     react_1["default"].createElement(button_1.Button, { variant: "ghost", size: "icon", className: " hover:bg-transparent focus:outline-none focus-visible:ring-0" },
@@ -142,6 +146,6 @@ var ChartItem = function (_a) {
                         react_1["default"].createElement(dropdown_menu_1.DropdownMenuItem, { className: "DropdownMenuItem", onClick: editChart }, t('chart.renameFolder')),
                         react_1["default"].createElement(dropdown_menu_1.DropdownMenuItem, { className: "DropdownMenuItem", onClick: function (event) {
                                 onDeleteChart(event);
-                            } }, t('chart.removeFolder'))))))));
+                            } }, t('chart.removeChart'))))))) : (react_1["default"].createElement("div", { className: 'h-1' })))));
 };
 exports["default"] = ChartItem;

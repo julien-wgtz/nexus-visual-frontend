@@ -13,7 +13,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { signupSchema } from "./schema";
 import { fetchData } from "@/lib/fetch";
 import { useState } from "react";
@@ -27,6 +27,7 @@ const SignUpForm = () => {
   const formSchema = signupSchema(t);
 
   const appStore: any = useAppStore();
+  const language = useLocale()
 
   const [loading, setLoading] = useState(false);
 
@@ -51,6 +52,7 @@ const SignUpForm = () => {
           body: JSON.stringify({
             email,
             password,
+            language
           }),
         }
       );
@@ -79,7 +81,7 @@ const SignUpForm = () => {
     const response = await createUser(values);
     if (response?.status == 201) {
       setLoading(false);
-      const { data } = await response.json();
+      const { data } = await (response as Response).json();
       const { user } = data;
       appStore.setUser(user);
       appStore.setAccount(user.accountUser[0].account);
@@ -92,7 +94,7 @@ const SignUpForm = () => {
       setLoading(false);
       form.setError("root", {
         type: "manual",
-        message: response.message,
+        message: (response as { status: number; message: string; }).message,
       });
     }
   };

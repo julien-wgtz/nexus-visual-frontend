@@ -60,7 +60,12 @@
     "delete": "Delete",
     "save": "Save",
     "removeFolderWithCharts": "Delete with charts",
-    "removeChart": "Delete chart"
+    "removeChart": "Delete chart",
+    "share": "Share",
+    "copy": "Copy",
+    "regenerate": "Regenerate link",
+    "copied": "Share link copied",
+    "regenerateDescription": "Warning, You are about to regenerate the link, which will render the previous link unusable."
   },
   "EditorChart": {
     "chart": {
@@ -68,6 +73,15 @@
       "data": "Data"
     },
     "themeDark": "Theme",
-    "line-type": "Line type"
-  }
+    "line-type": "Line type",
+    "maxSeries": "You have reached the maximum number of series",
+    "addSeries": "Add a series",
+    "selectSerie": "Select a series",
+    "selectX": "Select X axis",
+    "axeX": "X axis"
+  },
+  "shareLink": "Share link",
+  "shareLinkDescription": "Share your chart via this link, or embed it in your Notion page using the embed block.",
+  "cancel": "Cancel",
+  "confirm": "Confirm"
 }

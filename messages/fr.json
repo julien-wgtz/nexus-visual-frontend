@@ -60,7 +60,12 @@
     "delete": "Supprimer",
     "save": "Sauvegarder",
     "removeFolderWithCharts": "Supprimer avec les graphiques",
-    "removeChart": "Supprimer le graphique"
+    "removeChart": "Supprimer le graphique",
+    "share": "Partager",
+    "copy": "Copier",
+    "regenerate": "Régénérer le lien",
+    "copied": "Lien de partage copié",
+    "regenerateDescription": "Attention, vous êtes sur le point de régénérer le lien, ce qui rendra le lien précédent inutilisable."
   },
   "EditorChart": {
     "chart": {
@@ -68,6 +73,15 @@
       "data": "Données"
     },
     "themeDark": "Thème",
-    "line-type": "Type de ligne"
-  }
+    "line-type": "Type de ligne",
+    "maxSeries": "Vous avez atteint le nombre maximum de séries",
+    "addSeries": "Ajouter une série",
+    "selectSerie": "Sélectionnez une série",
+    "selectX": "Sélectionnez l'axe X",
+    "axeX": "Axe X"
+  },
+  "shareLink": "Lien de partage",
+  "shareLinkDescription": "Partagez votre graphique via ce lien ou intégrez-le dans votre page Notion à l'aide du bloc d'intégration.",
+  "cancel": "Annuler",
+  "confirm": "Confirmer"
 }

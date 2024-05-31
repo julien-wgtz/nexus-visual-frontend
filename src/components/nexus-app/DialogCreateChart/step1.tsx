@@ -22,7 +22,7 @@ interface Step1CreateChartProps {
 const Step1CreateChart: React.FC<Step1CreateChartProps> = ({setChart, chartType}) => {
 	const t = useTranslations('chart');
 
-	const types: ChartType[] = [ChartType.BAR, ChartType.LINE, ChartType.PIE];
+	const types: ChartType[] = [ChartType.BAR, ChartType.LINE];
 	const [selectedType, setSelectedType] = useState<ChartType | null>(chartType);
 
 

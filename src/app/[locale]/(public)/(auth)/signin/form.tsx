@@ -20,6 +20,8 @@ import { useState } from "react";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { useAppStore } from "@/store/appStore";
 import useDashboardStore from "@/store/dashboardStore";
+import { Languages } from "lucide-react";
+import { useLocale } from "next-intl";
 
 const SignInForm = () => {
   const router = useRouter();
@@ -27,8 +29,7 @@ const SignInForm = () => {
   const schema = signinSchema(t);
 
   const appStore: any = useAppStore();
-  const restoreData = useDashboardStore(state => state.restoreData);
-  
+  const restoreData = useDashboardStore((state: any) => state.restoreData);
   const [loading, setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof schema>>({
@@ -49,7 +50,7 @@ const SignInForm = () => {
         {
           body: JSON.stringify({
             email,
-            password,
+            password
           }),
         }
       );
@@ -79,12 +80,12 @@ const SignInForm = () => {
     const response = await connectUser(values);
     if (response?.status == 200) {
       setLoading(false);
-      const { data } = await response.json();
-      const { user, account } = data;
-      appStore.setUser(user);
-      appStore.setAccount(account);
-      restoreData();
-      router.push(`dashboard`);
+        const { data } = await (response as Response).json();
+        const { user, account } = data;
+        appStore.setUser(user);
+        appStore.setAccount(account);
+        restoreData();
+        router.push(`dashboard`);
     } else if (
       response?.status == 401 ||
       response?.status == 503

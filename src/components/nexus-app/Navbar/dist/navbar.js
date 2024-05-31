@@ -50,12 +50,19 @@ var navigation_1 = require("next/navigation");
 var react_1 = require("react");
 var ListFolders_1 = require("../Sidebar/ListFolders");
 var MarketingBlock_1 = require("../MarketingBlock/MarketingBlock");
+var dashboardStore_1 = require("@/store/dashboardStore");
+var user_1 = require("@/data/model/user");
 var Navbar = function (_a) {
     var _b = _a.asSidebar, asSidebar = _b === void 0 ? true : _b;
     var t = next_intl_1.useTranslations('common');
     var router = navigation_1.useRouter();
     var appStore = appStore_1.useAppStore();
-    var account = appStore.account;
+    var resetData = dashboardStore_1["default"](function (state) { return state.restoreData; });
+    var account = appStore.account, user = appStore.user, setUser = appStore.setUser;
+    var theme = appStore_1.useAppStore(function (state) { return state.theme; });
+    var setTheme = appStore_1.useAppStore(function (state) { return state.setTheme; });
+    var userApi = new user_1["default"]();
+    var versionApp = process.env.NEXT_PUBLIC_VERSION_APP;
     var handleLogout = function () { return __awaiter(void 0, void 0, void 0, function () {
         var response, error_1;
         return __generator(this, function (_a) {
@@ -66,6 +73,7 @@ var Navbar = function (_a) {
                 case 1:
                     response = _a.sent();
                     if (response === null || response === void 0 ? void 0 : response.ok) {
+                        resetData();
                         router.push('signin');
                     }
                     return [3 /*break*/, 3];
@@ -77,10 +85,21 @@ var Navbar = function (_a) {
             }
         });
     }); };
-    return (react_1["default"].createElement("header", { className: "fixed grid h-14 w-full grid-cols-[1fr_1fr] md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] items-center border-b px-4 lg:h-[60px] lg:px-6 bg-background " },
+    var changeTheme = function () {
+        var newTheme = theme === 'light' ? 'dark' : 'light';
+        setTheme(newTheme);
+        userApi.updateTheme(newTheme).then(function (data) {
+            setUser(data);
+        });
+    };
+    return (react_1["default"].createElement("header", { className: "fixed z-40 grid h-14 w-full grid-cols-[1fr_1fr] md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] items-center border-b px-4 lg:h-[60px] lg:px-6 bg-background " },
         react_1["default"].createElement("div", { className: "flex h-full items-center " + (asSidebar ? 'md:border-r' : '') },
-            react_1["default"].createElement(link_1["default"], { href: '/dashboard', className: "hidden md:flex" },
-                react_1["default"].createElement("h1", { className: "font-semibold" }, "Nexus")),
+            react_1["default"].createElement("div", { className: 'flex gap 2 items-center' },
+                react_1["default"].createElement(link_1["default"], { href: '/dashboard', className: "hidden md:flex" },
+                    react_1["default"].createElement("h1", { className: "font-semibold" }, "Nexus")),
+                react_1["default"].createElement(badge_1.Badge, { variant: "tester", className: "hidden md:flex ml-2" },
+                    "Alpha ",
+                    versionApp)),
             react_1["default"].createElement(sheet_1.Sheet, null,
                 react_1["default"].createElement(sheet_1.SheetTrigger, { asChild: true },
                     react_1["default"].createElement(button_1.Button, { variant: "outline", size: "icon", className: "shrink-0 md:hidden" },
@@ -88,15 +107,16 @@ var Navbar = function (_a) {
                 react_1["default"].createElement(sheet_1.SheetContent, { side: "left", className: "flex flex-col items-center w-[350px]" },
                     react_1["default"].createElement(ListFolders_1["default"], null),
                     react_1["default"].createElement(MarketingBlock_1["default"], null)))),
-        react_1["default"].createElement("div", { className: "flex justify-end items-center h-full" },
+        react_1["default"].createElement("div", { className: "flex justify-end items-center gap-2 h-full" },
+            react_1["default"].createElement(button_1.Button, { onClick: changeTheme, variant: "ghost", className: 'p-2 rounded-full' }, theme === 'light' ? (react_1["default"].createElement(lucide_react_1.Moon, { className: "h-5 w-5" })) : (react_1["default"].createElement(lucide_react_1.Sun, { className: "h-5 w-5" }))),
             react_1["default"].createElement(dropdown_menu_1.DropdownMenu, null,
                 react_1["default"].createElement(dropdown_menu_1.DropdownMenuTrigger, { asChild: true },
                     react_1["default"].createElement(button_1.Button, { variant: "secondary", size: "icon", className: "rounded-full" },
                         react_1["default"].createElement(lucide_react_1.CircleUser, { className: "h-5 w-5" }))),
                 react_1["default"].createElement(dropdown_menu_1.DropdownMenuContent, { align: "end" },
                     react_1["default"].createElement(dropdown_menu_1.DropdownMenuLabel, null,
-                        t('profile'),
-                        react_1["default"].createElement(badge_1.Badge, { className: "ml-4", variant: account === null || account === void 0 ? void 0 : account.status.toLowerCase() }, account === null || account === void 0 ? void 0 : account.status)),
+                        react_1["default"].createElement("span", { className: 'text-muted-foreground text-sm font-normal' }, user === null || user === void 0 ? void 0 : user.email),
+                        (account === null || account === void 0 ? void 0 : account.status) && (react_1["default"].createElement(badge_1.Badge, { className: "ml-2", variant: account === null || account === void 0 ? void 0 : account.status.toLowerCase() }, account === null || account === void 0 ? void 0 : account.status))),
                     react_1["default"].createElement(dropdown_menu_1.DropdownMenuSeparator, null),
                     react_1["default"].createElement(dropdown_menu_1.DropdownMenuItem, null,
                         react_1["default"].createElement(link_1["default"], { href: "/setting" }, t('settings'))),

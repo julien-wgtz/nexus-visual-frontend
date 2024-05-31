@@ -20,10 +20,11 @@ const ChartItem: React.FC<Props> = ({ index,chart, folderId, isShadow }: Props) 
   const t = useTranslations("");
 
   const chartApi = new ChartsApi();
-  const currentChart = useDashboardStore((state) => state.currentChart);
-  const setCurrentChart = useDashboardStore((state) => state.setCurrentChart);
-  const updateFolder = useFolderStore((state) => state.updateFolder);
-  const setFolders = useFolderStore((state) => state.setFolders);
+  const currentChart = useDashboardStore((state: any) => state.currentChart);
+  const setCurrentChart = useDashboardStore((state: any) => state.setCurrentChart);
+  const resetCurrentChart = useDashboardStore((state: any) => state.resetCurrentChart);
+  const updateFolder = useFolderStore((state: any) => state.updateFolder);
+  const setFolders = useFolderStore((state: any) => state.setFolders);
 
   const [isEditing, setIsEditing] = useState(false);
   const [chartName, setChartName] = useState(chart?.title || "");
@@ -32,7 +33,7 @@ const ChartItem: React.FC<Props> = ({ index,chart, folderId, isShadow }: Props) 
   const ref = useRef(null);
   const [{ isOver }, drop] = useDrop({
     accept: 'chart',
-    drop(item, monitor) {
+    drop(item: any, monitor) {
       if (!ref.current) {
         return;
       }
@@ -61,6 +62,7 @@ const ChartItem: React.FC<Props> = ({ index,chart, folderId, isShadow }: Props) 
   const onDeleteChart = (event: any) => {
     chartApi.deleteChart({id: chart.id}).then((res) => {
       updateFolder(res);
+      resetCurrentChart(undefined);
     })
   }
 
@@ -71,8 +73,9 @@ const ChartItem: React.FC<Props> = ({ index,chart, folderId, isShadow }: Props) 
   };
 
   const handleOnBlur = async () => {
-    if (chart.title === inputRef?.current?.value) {setIsEditing(false); return;}
-    chart.title = inputRef?.current?.value;
+    const input: any = inputRef?.current;
+    if (chart.title === input.value) {setIsEditing(false); return;}
+    chart.title = input.value;
     chartApi.updateChart(chart).then((res) => {
       if(currentChart.id === chart.id) {
         setCurrentChart(res);
@@ -89,8 +92,9 @@ const ChartItem: React.FC<Props> = ({ index,chart, folderId, isShadow }: Props) 
       }
     };
     setTimeout(() => {
+      const input: any = inputRef?.current;
       if (isEditing && inputRef.current) {
-        inputRef?.current?.focus();
+        input.focus();
         document.addEventListener('keydown', handleKeyDown);
       }
     }, 180);

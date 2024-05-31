@@ -1,11 +1,12 @@
 "use client";
-import React, { useEffect } from 'react';
+import React, { use, useEffect } from 'react';
 import Navbar from '@/components/nexus-app/Navbar/navbar';
 import { fetchData } from '@/lib/fetch';
 import { useRouter } from 'next/navigation';
 import { useAppStore } from '@/store/appStore';
 import UserApi from '@/data/model/user';
 import { set } from 'lodash';
+import { Toaster } from '@/components/ui/toaster';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -14,9 +15,12 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const userApi = new UserApi();
   const router = useRouter();
-  const account = useAppStore(state => state.account);
-  const setAccount = useAppStore(state => state.setAccount);
-  const setUser = useAppStore(state => state.setUser);
+  const account = useAppStore((state: any) => state.account);
+  const setAccount = useAppStore((state: any) => state.setAccount);
+  const setUser = useAppStore((state: any) => state.setUser);
+  const themeUser = useAppStore((state: any) => state.theme);
+  const setThemeUser = useAppStore((state: any) => state.setTheme);
+  const [theme, setTheme] = React.useState(themeUser);
 
   useEffect(() => {
     const fetch = async ()=> {
@@ -30,6 +34,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           const user = await userApi.getUserById(res.id);
           setAccount(user.currentAccount);
           setUser(user);
+          if(themeUser !== user.theme) {
+            setTheme(user.theme);
+            setThemeUser(user.theme);
+          }
         }
       }catch (error) {
         console.error(error);
@@ -37,14 +45,25 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     }
     fetch();
   }, []);
+
+  useEffect(() => {
+    setTheme(themeUser);
+  }, [themeUser]);
   
   return (
-    <>
-      <Navbar />
-      <main className="w-full h-full pt-[60px] box-border	">
-        {children}
-      </main>
-    </>
+    <body className={`flex flex-col items-center ${theme}`}>
+      {theme ? (
+        <>
+          <Navbar />
+          <main className="bg-background w-full h-full pt-[60px] box-border	">
+            {children}
+          </main>
+            <Toaster />
+        </>
+        ): (
+          <></>
+        )}
+    </body>
   );
 };
 

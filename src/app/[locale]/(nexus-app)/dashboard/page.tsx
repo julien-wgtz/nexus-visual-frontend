@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import CreateChartDialog from "@/components/nexus-app/DialogCreateChart/CreateChartDialog";
 import EditorChart from "@/components/nexus-app/EditorChart/EditorChart";
 import Sidebar from "@/components/nexus-app/Sidebar/sidebar";
@@ -10,41 +10,47 @@ import ChartsApi from "@/data/model/chart";
 import configBase from '@/data/config/configChart.json';
 import { set } from "lodash";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useAppStore } from "@/store/appStore";
 
 const Page = () => {
   
   const chartApi = new ChartsApi();
-  const currentChart = useDashboardStore((state) => state.currentChart);
-  const setConfigChart = useDashboardStore((state) => state.setConfigChart);
-  const config = useDashboardStore((state) => state.configChart);
+  const currentChart = useDashboardStore((state: any) => state.currentChart);
+  const setConfigChart = useDashboardStore((state: any) => state.setConfigChart);
+  const config = useDashboardStore((state: any) => state.configChart);
+  const user = useAppStore((state:any) => state.user); 
   const [data, setData] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if(currentChart === null) {
+    if(currentChart === null || currentChart === undefined) {
       setIsLoading(true)
       return;
     }
     setData([])
     setIsLoading(false)
+
     const getAllDataConfigChart = async () => {
       await chartApi.getChartData({id: currentChart.id}).then((data) => {
         setData(data);
       })
-
+      
       await chartApi.getConfigChart({id: currentChart.id}).then((configFromDb) => {
         if(!configFromDb.config) {
-          setConfigChart({...configBase})
+
+          setConfigChart({...configBase, id: currentChart.id, theme: user.theme})
           chartApi.updateChart({id: currentChart.id, config: configBase})
         } else {
-          setConfigChart(configFromDb.config)
+          if(configFromDb.config.id == currentChart.id) {
+            setConfigChart(configFromDb.config)
+          }
         }
       })
       setIsLoading(true);
     }
-    getAllDataConfigChart();
+      getAllDataConfigChart();
   },[currentChart])
-  
+
   // get All Data about chart
   return (
     <div className="grid h-14   w-full h-full ">
@@ -52,14 +58,14 @@ const Page = () => {
       <div className="md:ml-[236px] lg:ml-[304px]">
         {isLoading ?(
           <>
-            {currentChart ? (
+            {currentChart && config ? (
               <EditorChart  chart={currentChart} data={data} config={config}/>
             ) : (
             <div className=" h-full p-4">
               <div className="flex flex-1 items-center justify-center h-full rounded-lg border border-dashed shadow-sm">
                 <div className="flex flex-col items-center gap-1 text-center">
                   <h3 className="text-2xl font-bold tracking-tight">
-                    Vous n'avez aucun graphique de crée
+                    Vous navez aucun graphique de crée
                   </h3>
                   <p className="text-sm text-muted-foreground">
                     You can start using Nexus as soon create your first chart
@@ -78,7 +84,6 @@ const Page = () => {
               <div className="flex justify-between items-center">
                 <h3 className="text-lg font-semibold"><Skeleton className="w-[250px] h-[28px]"/></h3>
                 <div className='flex gap-2'>
-                  <Skeleton className="w-[130px] h-[36px]"/>
                   <Skeleton className="w-[80px] h-[36px]"/>
                 </div>
               </div>

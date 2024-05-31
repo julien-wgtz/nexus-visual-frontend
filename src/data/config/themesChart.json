@@ -20,8 +20,10 @@
 	"dark": {
 		"backgroundColor": "#090e1a",
 		"fontColor": "#546483",
+		"secondaryColor": "#ffffff",
 		"fontSize": "14px",
 		"fontWeight": "normal",
+		"hoverColor": "#f9fafb",
 		"grid" : {
 			"color": "#263147",
 			"widthDash": "2",
@@ -34,17 +36,17 @@
 			{"color": "#ec4089"},
 			{"color": "#848aff"},
 			{"color": "#ff00ff"},
-			{"color": "#3f45c6"},
-			{"color": "#0fbcb4"},
-			{"color": "#fa8911"},
-			{"color": "#ec4089"}
+			{"color": "#32CD32"},
+			{"color": "#FFD700"}
 		]
 	},
 	"light": {
 		"backgroundColor": "#fdfdfd",
 		"fontColor": "#a8b3c5",
+		"secondaryColor": "#030712",
 		"fontSize": "14px",
 		"fontWeight": "normal",
+		"hoverColor": "#546483",
 		"grid" : {
 			"color": "#e4e9ef",
 			"widthDash": "3",
@@ -57,17 +59,17 @@
 			{"color": "#ec4089"},
 			{"color": "#848aff"},
 			{"color": "#ff00ff"},
-			{"color": "#3f45c6"},
-			{"color": "#0fbcb4"},
-			{"color": "#fa8911"},
-			{"color": "#ec4089"}
+			{"color": "#32CD32"},
+			{"color": "#FFD700"}
 		]
 	},
 	"purple": {
 		"backgroundColor": "#f9f0f9",
 		"fontColor": "#6a4a83",
+		"secondaryColor": "#380061",
 		"fontSize": "14px",
 		"fontWeight": "normal",
+		"hoverColor": "#8112c9",
 		"grid": {
 			"color": "#e3bde3",
 			"widthDash": "2",
@@ -80,7 +82,69 @@
 			{"color": "#c361ff"},
 			{"color": "#e3b8ff"}
 		]
-	}
-	
-
+	},
+	"green": {
+        "backgroundColor": "#eafaf1",
+        "fontColor": "#2e604a",
+        "secondaryColor": "#1c402d",
+        "fontSize": "14px",
+        "fontWeight": "normal",
+        "hoverColor": "#3a7860",
+        "grid": {
+            "color": "#cde6d9",
+            "widthDash": "2",
+            "gapDash": "2"
+        },
+        "colors": [
+            {"color": "#2a9d8f"},
+            {"color": "#264653"},
+            {"color": "#e9c46a"},
+            {"color": "#f4a261"},
+            {"color": "#e76f51"}
+        ]
+    },
+    "sunset": {
+        "backgroundColor": "#191919",
+        "fontColor": "#d4d4d4",
+        "secondaryColor": "#5a5a5a",
+        "fontSize": "14px",
+        "fontWeight": "normal",
+        "hoverColor": "#d4d4d4",
+        "grid": {
+            "color": "#5a5a5a",
+            "widthDash": "2",
+            "gapDash": "2"
+        },
+        "colors": [
+			{"color": "#3f45c6"},
+			{"color": "#0fbcb4"},
+			{"color": "#fa8911"},
+			{"color": "#ec4089"},
+			{"color": "#848aff"},
+			{"color": "#ff00ff"},
+			{"color": "#3f45c6"},
+			{"color": "#0fbcb4"},
+			{"color": "#fa8911"},
+			{"color": "#ec4089"}
+        ]
+    },
+    "ocean": {
+        "backgroundColor": "#d8f3dc",
+        "fontColor": "#1d3557",
+        "secondaryColor": "#457b9d",
+        "fontSize": "14px",
+        "fontWeight": "normal",
+        "hoverColor": "#a8dadc",
+        "grid": {
+            "color": "#b7e4c7",
+            "widthDash": "2",
+            "gapDash": "2"
+        },
+        "colors": [
+            {"color": "#1d3557"},
+            {"color": "#457b9d"},
+            {"color": "#a8dadc"},
+            {"color": "#003049"}
+        ]
+    }
 }

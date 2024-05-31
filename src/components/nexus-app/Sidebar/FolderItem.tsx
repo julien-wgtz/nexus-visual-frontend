@@ -25,13 +25,15 @@ export const FolderItem = ({ index, folder }: FolderItemProps) => {
   const inputRef = useRef(null);
 
   const chartApi = new ChartsApi();
-  const setOpenDialogCreateChart = useDashboardStore((state) => state.setDialogIsOpen);
-  const setDataForChart = useDashboardStore((state) => state.setDataForChart);
+  const setOpenDialogCreateChart = useDashboardStore((state: any) => state.setDialogIsOpen);
+  const setDataForChart = useDashboardStore((state: any) => state.setDataForChart);
   
   const folderApi = new FoldersApi();
-  const currentFolder = useDashboardStore(state => state.currentFolder)
-  const updateFolder = useFolderStore(state => state.updateFolder)
-  const setFolders = useFolderStore(state => state.setFolders)
+  const currentFolder = useDashboardStore((state: any) => state.currentFolder)
+  const currentChart = useDashboardStore((state: any) => state.currentChart)
+  const resetCurrentChart = useDashboardStore((state: any) => state.resetCurrentChart)
+  const updateFolder = useFolderStore((state: any) => state.updateFolder)
+  const setFolders = useFolderStore((state: any) => state.setFolders)
 
 
   const [isOpened, setIsOpened] = useState(currentFolder == folder.id);
@@ -42,7 +44,7 @@ export const FolderItem = ({ index, folder }: FolderItemProps) => {
 
   const [{ isOverLine, isOverFolder }, drop] = useDrop({
     accept: ['folder', 'chart'],
-    drop(item, monitor) {
+    drop(item: any, monitor) {
       if (!ref.current) {
         return;
       }
@@ -100,8 +102,9 @@ export const FolderItem = ({ index, folder }: FolderItemProps) => {
 
   useEffect(() => { 
     setTimeout(() => {
+      const input: any = inputRef?.current;
       if (isEditing && inputRef.current) {
-        inputRef?.current?.focus();
+        input.focus();
       }
     }, 180);
   }, [isEditing]);
@@ -114,8 +117,9 @@ export const FolderItem = ({ index, folder }: FolderItemProps) => {
   };
 
   const handleOnBlur = async () => {
-    if (folder.name === inputRef?.current?.value) {setIsEditing(false); return;}
-    folder.name = inputRef?.current?.value;
+    const input: any = inputRef?.current;
+    if (folder.name === input.value) {setIsEditing(false); return;}
+    folder.name = input.value;
     const folderRename = await folderApi.updateFolder(folder);
     updateFolder(folderRename);
     setIsEditing(false);
@@ -136,7 +140,9 @@ export const FolderItem = ({ index, folder }: FolderItemProps) => {
   const onRemoveFolderWithCharts = () => {
     folderApi.deleteFolderWithCharts(folder.id).then((newFolder) => {
       setFolders(newFolder)
+      if(currentChart.folderId == folder.id) resetCurrentChart(undefined);
     })
+  
   }
 
   return (

@@ -5,19 +5,25 @@ import {  ResponsiveContainer, Tooltip, Legend, XAxis, CartesianGrid, YAxis, Lin
 import themes from '@/data/config/themesChart.json';
 import CustomizedAxisTick from '../tickAxeX';
 import CustomTooltip from '../tooltip';
+import { set } from 'lodash';
+import CircleLoader from '../../Loader/CircleLoader';
+import LegendCustom from '../legend';
 
 interface NexusLineProps {
-	data: Charts[];
+	data: any;
+	config: any;
 }
 
-const NexusLine: React.FC<NexusLineProps> = ({ data }) => {
+const NexusLine: React.FC<NexusLineProps> = ({ data, config }) => {
 	
-	const config = useDashboardStore((state) => state.configChart);
-	const [styles, setStyles] =  useState(themes[config.theme])
+	const [styles, setStyles] =  useState((themes as any)[config.theme])
 	const [propertiesSelected, setPropertiesSelected] = useState([])
-	const [dataAxeX, setDataAxeX] = useState([])
+	const [dataAxeX, setDataAxeX] = useState<any>([])
+	const [isLoading, setIsLoading] = useState(true)
+	const [opacity, setOpacity] = useState([])
 
 	useEffect(() => {
+		setIsLoading(true)
 		const getPropertiesSelected = data.properties?.filter((p: any) => {
 			if(config.dataSelected?.length == 0) return false
 			
@@ -30,29 +36,60 @@ const NexusLine: React.FC<NexusLineProps> = ({ data }) => {
 		})
 		setPropertiesSelected(getPropertiesSelected)
 		setDataAxeX(getDataAxeX)
+		setIsLoading(false)
+		
+		const op:any = propertiesSelected?.map((ds: any) => {
+			return {name: ds.name, opacity: 1}
+		})
+		setOpacity(op)
 	}, [data, config])
 
 	useEffect(() => {
-		setStyles(themes[config.theme])
+		setStyles((themes as any)[config.theme])
 	}, [config])
 
+	const getOpacity = (name: string) => {
+		const op: any = opacity.find((o: any) => o.name === name)
+		return op?.opacity
+	}
+
+	const setOpacityAll = (name?: string) => {
+		const updatedOpacity: any = opacity.map((op: any) => {
+			if(!name) {
+				return { ...op, opacity: 1 };
+			}
+			if (op.name === name) {
+				return { ...op, opacity: 1 };
+			} else {
+				return { ...op, opacity: 0.2 };
+			}
+		});
+		setOpacity(updatedOpacity);
+	};
+
 	return (	
-		<ResponsiveContainer  width="100%" height="100%">
-			<LineChart data={data.data} margin={{ top: 0, right: 0, bottom: config.axeX?.label || config.legend.display ? 20 : 0, left: config.axeY?.label ? 10 : 0 }}>
-				{config.background && <CartesianGrid strokeDasharray={`${styles.grid.widthDash} ${styles.grid.gapDash}`} stroke={styles.grid.color} />}
-				<XAxis dataKey={dataAxeX[0]?.name} tick={<CustomizedAxisTick styles={styles} type={dataAxeX[0]?.type} />}  style={{stroke: styles.grid.color}}>
-					{config.axeX?.label !== "" && <Label value={config.axeX.label} position={config.axeX?.position} fill={styles.fontColor} fontSize={styles.fontSize} fontWeight={styles.fontWeight} />}
-				</XAxis>
-				<YAxis tick={{fill: styles.fontColor, strokeWidth: 0, fontSize: styles.fontSize, fontWeight: styles.fontWeight }}  style={{stroke: styles.grid.color}}>
-					{config.axeY?.label !== "" && <Label value={config.axeY.label} angle={-90}  position={config.axeY?.position} fill={styles.fontColor} fontSize={styles.fontSize} fontWeight={styles.fontWeight} />}
-				</YAxis>	
-				{config.legend.display && <Legend verticalAlign={config.legend.verticalAlign} align={config.legend.align} height={30}  wrapperStyle={{paddingTop: "25px", fontSize: styles.fontSize, fontWeight: styles.fontWeight}}/>}
-				{propertiesSelected.map((p: any, i: number) => {
-					return <Line type={config.lineType} dataKey={p.name} stroke={styles.colors[i].color} key={p.id} />
-				})}
-				<Tooltip content={<CustomTooltip styles={styles} labelType={dataAxeX[0]?.type}/>}/>
-			</LineChart>
-      </ResponsiveContainer>
+		<>
+		{isLoading ? (<CircleLoader />) :
+		(
+			<ResponsiveContainer  width="100%" height="100%">
+				<LineChart data={data.data} margin={{ top: 0, right: 0, bottom: config.axeX?.label && !config.legend.display ? 20 : 0, left: config.axeY?.label ? 10 : 0 }}>
+					{config.background && <CartesianGrid strokeDasharray={`${styles.grid.widthDash} ${styles.grid.gapDash}`} stroke={styles.grid.color} />}
+					<XAxis dataKey={dataAxeX?.length > 0 ?dataAxeX[0]?.name : null} tick={<CustomizedAxisTick styles={styles} type={dataAxeX?.length > 0 ?dataAxeX[0]?.type : null} />}  style={{stroke: styles.grid.color}}>
+						{config.axeX?.label !== "" && <Label value={config.axeX.label} position={config.axeX?.position} fill={styles.fontColor} fontSize={styles.fontSize} fontWeight={styles.fontWeight} />}
+					</XAxis>
+					<YAxis tick={{fill: styles.fontColor, strokeWidth: 0, fontSize: styles.fontSize, fontWeight: styles.fontWeight }}  style={{stroke: styles.grid.color}}>
+						{config.axeY?.label !== "" && <Label value={config.axeY.label} angle={-90}  position={config.axeY?.position} fill={styles.fontColor} fontSize={styles.fontSize} fontWeight={styles.fontWeight} />}
+					</YAxis>	
+					{config.legend.display && <Legend content={<LegendCustom setOpacityAll={setOpacityAll} config={config} styles={styles} type="line"/>} verticalAlign={config.legend.verticalAlign} />}
+					{propertiesSelected?.map((p: any, i: number) => {
+						return <Line type={config.lineType} dataKey={p.name} strokeOpacity={getOpacity(p.name)} stroke={styles.colors[i].color} key={p.id} />
+					})}
+					<Tooltip cursor={{ stroke: `${styles.hoverColor}85`}} content={<CustomTooltip styles={styles} labelType={dataAxeX?.length > 0 ?dataAxeX[0]?.type : null}/>}/>
+				</LineChart>
+		</ResponsiveContainer>
+		)}
+
+		</>
 	);
 };
 

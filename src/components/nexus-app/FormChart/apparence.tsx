@@ -17,9 +17,9 @@ const ApparenceForm: React.FC<Props> = ({  }) => {
 
 	const t = useTranslations("EditorChart")
 	const chartApi = new ChartsApi();
-	const currentChart = useDashboardStore((state) => state.currentChart);
-	const configChart = useDashboardStore((state) => state.configChart);
-	const setConfigChart = useDashboardStore((state) => state.setConfigChart);
+	const currentChart = useDashboardStore((state: any) => state.currentChart);
+	const configChart = useDashboardStore((state: any) => state.configChart);
+	const setConfigChart = useDashboardStore((state: any) => state.setConfigChart);
 	const [theme, setTheme] = useState(configChart.theme);
 	const [line, setLine] = useState(configChart.lineType);
 	const [grid, setGrid] = useState(configChart.background);
@@ -139,11 +139,11 @@ const ApparenceForm: React.FC<Props> = ({  }) => {
 			</div>
 			<div className='grid gap-3'>
 				<Label htmlFor='axeY'>Titre axe Y</Label>
-				<Input value={labelAxeY} onChange={(value) => setLabelAxeY(value)} id="axeY" name='axeY' placeholder='Label' />
+				<Input value={labelAxeY} onChange={(value: any) => setLabelAxeY(value)} id="axeY" name='axeY' placeholder='Label' />
 			</div>
 			<div className='grid gap-3'>
 				<Label htmlFor='axeX'>Label axe X</Label>
-				<Input value={labelAxeX} onChange={(value) => setLabelAxeX(value)} id="axeX" name='axeX' placeholder='Label' />
+				<Input value={labelAxeX} onChange={(value: any) => setLabelAxeX(value)} id="axeX" name='axeX' placeholder='Label' />
 			</div>
 		</fieldset>
 	  </form>
