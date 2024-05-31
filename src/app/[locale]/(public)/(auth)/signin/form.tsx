@@ -42,7 +42,7 @@ const SignInForm = () => {
 
   const connectUser = async (values: any) => {
     setLoading(true);
-
+    console.log("values", process.env)
     const { email, password } = values;
     try {
       const response = await fetchData(
