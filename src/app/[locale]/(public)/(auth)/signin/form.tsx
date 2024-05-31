@@ -39,10 +39,11 @@ const SignInForm = () => {
       password: "",
     },
   });
-
+  
+  console.log("values", process.env)
   const connectUser = async (values: any) => {
+    console.log("ifjeifjeifjef")
     setLoading(true);
-    console.log("values", process.env)
     const { email, password } = values;
     try {
       const response = await fetchData(
