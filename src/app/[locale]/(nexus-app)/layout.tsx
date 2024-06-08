@@ -5,7 +5,6 @@ import { fetchData } from '@/lib/fetch';
 import { useRouter } from 'next/navigation';
 import { useAppStore } from '@/store/appStore';
 import UserApi from '@/data/model/user';
-import { set } from 'lodash';
 import { Toaster } from '@/components/ui/toaster';
 
 interface LayoutProps {
@@ -22,6 +21,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const setThemeUser = useAppStore((state: any) => state.setTheme);
   const [theme, setTheme] = React.useState(themeUser);
 
+  
   useEffect(() => {
     const fetch = async ()=> {
       try {
