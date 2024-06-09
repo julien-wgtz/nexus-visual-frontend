@@ -27,9 +27,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       try {
         const response = await fetchData(`${process.env.NEXT_PUBLIC_BACKEND_URL}auth/check`);
         const res = await response.json();
-        if(response.status === 401){
-          router.replace("/signin")
-        }
+        // if(response.status === 401){
+        //   router.replace("/signin")
+        // }
+        console.log(res)
         if(response.status === 200 && account === null){
           const user = await userApi.getUserById(res.id);
           setAccount(user.currentAccount);
