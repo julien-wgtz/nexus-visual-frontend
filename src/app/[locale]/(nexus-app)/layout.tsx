@@ -30,7 +30,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         // if(response.status === 401){
         //   router.replace("/signin")
         // }
-        console.log(res)
+        console.log(res);
         if(response.status === 200 && account === null){
           const user = await userApi.getUserById(res.id);
           setAccount(user.currentAccount);

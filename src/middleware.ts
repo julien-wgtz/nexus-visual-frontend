@@ -13,15 +13,15 @@ const intlMiddleware = createIntlMiddleware({
 });
 
 const authMiddleware = (req: NextRequest) => {
-  const isAuthorized =
-    req.cookies.get("connect.sid") !== undefined;
-  if (isAuthorized) {
+  // const isAuthorized =
+  //   req.cookies.get("connect.sid") !== undefined;
+  // if (isAuthorized) {
     return intlMiddleware(req);
-  } else {
-    return NextResponse.redirect(
-      `${process.env.BASE_URL}signin`
-    );
-  }
+  // } else {
+  //   return NextResponse.redirect(
+  //     `${process.env.BASE_URL}signin`
+  //   );
+  // }
 };
 
 export default function middleware(
